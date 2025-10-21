@@ -11,7 +11,13 @@ export async function getLatestProducts() {
     orderBy: { createdAt: "desc" },
     take: LATEST_PRODUCTS_LIMIT,
   });
-  console.log(LATEST_PRODUCTS_LIMIT);
+
+  const formattedData = data.map((product) => ({
+    ...product,
+    price: Number(product.price),
+    rating: Number(product.rating)
+  }));
+
   // Convert to plain object from prisma via utils
-  return convertToPlainObject(data);
+  return convertToPlainObject(formattedData);
 }
