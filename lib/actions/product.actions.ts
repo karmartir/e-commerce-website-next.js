@@ -12,12 +12,12 @@ export async function getLatestProducts() {
     take: LATEST_PRODUCTS_LIMIT,
   });
 
-  const formattedData = data.map((product) => ({
-    ...product,
-    price: Number(product.price),
-    rating: Number(product.rating)
-  }));
+  // const formattedData = data.map((product) => ({
+  //   ...product,
+  //   price: Number(product.price),
+  //   rating: Number(product.rating),
+  // }));
 
   // Convert to plain object from prisma via utils
-  return convertToPlainObject(formattedData);
+  return convertToPlainObject(data);
 }

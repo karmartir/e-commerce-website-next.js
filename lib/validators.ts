@@ -23,6 +23,4 @@ export const insertProductSchema = z.object({
   banner: z.string().nullable(),
   price: currency,
   brand: z.string(),
-  //   rating: z.number(),
-  //   numReviews: z.number(),
 });
