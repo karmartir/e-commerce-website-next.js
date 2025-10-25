@@ -24,3 +24,22 @@ export const insertProductSchema = z.object({
   price: currency,
   brand: z.string(),
 });
+
+// Schema for signing users in
+// export const signInFormSchema = z.object({
+//   email: z.string().email({ message: "Invalid email address" }),
+//   password: z
+//     .string()
+//     .min(6, { message: "Password must be at least 6 characters long" }),
+// });
+
+export const signInFormSchema = z.object({
+  email: z
+    .string()
+    .refine((val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val), {
+      message: "Invalid email address",
+    }),
+  password: z
+    .string()
+    .min(6, { message: "Password must be at least 6 characters long" }),
+});
