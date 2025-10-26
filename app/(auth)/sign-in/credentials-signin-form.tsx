@@ -1,0 +1,62 @@
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { signInDefaultValues } from "@/lib/constants";
+import Link from "next/link";
+
+const CredentialsSignInForm = () => {
+  return (
+    <form>
+      <div className="space-y-6">
+        <div>
+          <Label className="mb-2 text-gray-500" htmlFor="email">
+            Email:
+          </Label>
+          <Input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="Enter your e-mail..."
+            required
+            autoComplete="email"
+            defaultValue={signInDefaultValues.email}
+          />
+        </div>
+
+        <div>
+          <Label className="mb-2  text-gray-500" htmlFor="password">
+            Password:
+          </Label>
+          <Input
+            type="password"
+            id="password"
+            name="password"
+            required
+            placeholder="Enter your password..."
+            autoComplete="password"
+            defaultValue={signInDefaultValues.password}
+          />
+        </div>
+        <div>
+          <Button className="w-full" variant="default" type="submit">
+            Sign In
+          </Button>
+        </div>
+        <div className="text-sm text-center text-muted-foreground">
+          Don&apos;t have an account?{" "}
+          <Link
+            href="/sign-up"
+            target="_self"
+            className="underline underline-offset-4 hover:text-primary"
+          >
+            Sign Up
+          </Link>
+        </div>
+      </div>
+    </form>
+  );
+};
+
+export default CredentialsSignInForm;
