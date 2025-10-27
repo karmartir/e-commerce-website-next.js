@@ -49,10 +49,10 @@ export async function signUpUser(
       data: {
         name: user.name,
         email: user.email,
-        password: plainPassword,
+        password: user.password,
       },
     });
-    await signIn("credentials", { email: user.email, password: user.password });
+    await signIn("credentials", { email: user.email, password: plainPassword });
     return { success: true, message: "User registered successfully" };
   } catch (error) {
     if (isRedirectError(error)) {
