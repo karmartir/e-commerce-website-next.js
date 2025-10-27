@@ -17,9 +17,18 @@ export const metadata: Metadata = {
   title: "Sign In",
   description: `Sign in to your ${APP_NAME} account to access your dashboard and manage your orders.`,
 };
-const SignInPage = async () => {
+const SignInPage = async (props: {
+  searchParams: Promise<{
+    callbackUrl?: string;
+  }>;
+}) => {
+  // Check if user is already signed in
+  const { callbackUrl } = await props.searchParams;
   const session = await auth();
-  if (session) redirect("/");
+  if (session) {
+    return redirect(callbackUrl || "/");
+  }
+
   return (
     <div className="w-full max-w-md mx-auto">
       <Card className="p-6">
