@@ -1,21 +1,15 @@
 import { z } from "zod";
-import { insertProductSchema } from "@/lib/validators";
+import {
+  insertProductSchema,
+  insertCartSchema,
+  cartItemSchema,
+} from "@/lib/validators";
 export type Product = z.infer<typeof insertProductSchema> & {
   id: string;
   rating: string;
   createdAt: Date;
-  // price: string;
-  // name: string;
-  // slug: string;
-  // category: string;
-  // images: string[];
-  // brand: string;
-  // description: string;
-  // stock: number;
-  // price: number;
-  // rating: number;
-  // numReviews: number;
-  // isFeatured: boolean;
-  // banner: string | null;
-  // createdAt: Date;
 };
+
+export type Cart = z.infer<typeof insertCartSchema>;
+
+export type CartItem = z.infer<typeof cartItemSchema>;
