@@ -16,12 +16,9 @@ const AddToCart = ({ item }: { item: CartItem }) => {
     if (!res.success) {
       //  Error toast with orange background and subtle border
       toast.custom(
-        (t) => (
-          <div
-            className="flex items-center justify-between gap-4 bg-orange-800 text-white px-4 py-3 rounded-lg shadow-lg border border-orange-700 animate-in fade-in-50
-                       data-[swipe=end]:animate-out swipe-end:fade-out-50"
-          >
-            <span className="text-md font-medium px-3">{res.message}</span>
+        () => (
+          <div>
+            <span className="text-md font-medium">{res.message}</span>
           </div>
         ),
         { duration: 3000 }
@@ -33,12 +30,16 @@ const AddToCart = ({ item }: { item: CartItem }) => {
     toast.custom(
       (t) => (
         <div
-          className="flex items-center justify-between gap-4 bg-white text-gray-900 p-5 rounded-lg shadow-md border border-gray-200 animate-in fade-in-50
-                     data-[swipe=end]:animate-out swipe-end:fade-out-50"
+          className="flex items-center justify-between gap-5 max-w-md w-full sm:max-w-lg bg-white text-gray-900 px-5 py-3 rounded-lg shadow-md border border-gray-200 animate-in fade-in-50
+             data-[swipe=end]:animate-out swipe-end:fade-out-50"
         >
-          <span className="text-md font-medium">
-            &quot;{item.name}&quot; added to cart
-          </span>
+          <button
+            onClick={() => toast.dismiss(t)}
+            className="absolute top-1 right-1 w-5 h-5 flex items-center justify-center text-gray-500 hover:bg-gray-500 hover:text-white border border-gray-200 rounded-sm text-xs"
+          >
+            ×
+          </button>
+          <span className="text-md font-medium">{res.message}</span>
           <Button
             size="sm"
             className="variant-primary hover:bg-gray-700 text-white"
