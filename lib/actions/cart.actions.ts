@@ -8,7 +8,6 @@ import { cartItemSchema, insertCartSchema } from "../validators";
 import { revalidatePath } from "next/cache";
 // import { th } from "zod/v4/locales";
 import { Prisma } from "@prisma/client";
-import { get } from "http";
 
 // Calculate cart prices
 const calcPrice = (items: CartItem[]) => {
@@ -142,8 +141,8 @@ export async function removeItemFromCart(productId: string) {
     // Get session and user Id
     const sessionCartId = (await cookies()).get("sessionCartId")?.value;
     if (!sessionCartId) throw new Error("No session cart ID found");
-    const session = await auth();
-    const userId = session?.user?.id ? (session.user.id as string) : undefined;
+    // const session = await auth();
+    // const userId = session?.user?.id ? (session.user.id as string) : undefined;
 
     // Get product
     const product = await prisma.product.findFirst({
