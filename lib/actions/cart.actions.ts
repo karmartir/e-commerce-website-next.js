@@ -6,8 +6,9 @@ import { auth } from "@/auth";
 import { prisma } from "@/db/prisma";
 import { cartItemSchema, insertCartSchema } from "../validators";
 import { revalidatePath } from "next/cache";
-import { th } from "zod/v4/locales";
+// import { th } from "zod/v4/locales";
 import { Prisma } from "@prisma/client";
+import { get } from "http";
 
 // Calculate cart prices
 const calcPrice = (items: CartItem[]) => {
@@ -135,3 +136,61 @@ export const getMyCart = async () => {
     taxPrice: cart.taxPrice.toString(),
   });
 };
+
+export async function removeItemFromCart(productId: string) {
+  try {
+    // Get session and user Id
+    const sessionCartId = (await cookies()).get("sessionCartId")?.value;
+    if (!sessionCartId) throw new Error("No session cart ID found");
+    const session = await auth();
+    const userId = session?.user?.id ? (session.user.id as string) : undefined;
+
+    // Get product
+    const product = await prisma.product.findFirst({
+      where: { id: productId },
+    });
+    if (!product) throw new Error("Product not found");
+
+    // Get user cart
+    const cart = await getMyCart();
+    if (!cart) throw new Error("Cart not found");
+
+    //Check if item exists in cart
+    const existItem = (cart.items as CartItem[]).find(
+      (x) => x.productId === productId
+    );
+    if (!existItem) throw new Error("Item not found in cart");
+
+    // Check if only one item in cart
+    if (existItem.qty === 1) {
+      // Remove from the cart
+      cart.items = (cart.items as CartItem[]).filter(
+        (x) => x.productId !== productId
+      );
+    } else {
+      // Decrease quantity
+      (cart.items as CartItem[]).find((x) => x.productId === productId)!.qty =
+        existItem.qty - 1;
+    }
+    // Save to database
+    await prisma.cart.update({
+      where: { id: cart.id },
+      data: {
+        items: cart.items as Prisma.CartUpdateitemsInput[],
+        ...calcPrice(cart.items as CartItem[]),
+      },
+    });
+    // Revalidate cart cache
+    revalidatePath(`/product/${product.slug}`);
+    return {
+      success: true,
+      message: `"${product.name}" removed from cart`,
+    };
+  } catch (error) {
+    // Catch errors
+    return {
+      success: false,
+      message: formatError(error),
+    };
+  }
+}
