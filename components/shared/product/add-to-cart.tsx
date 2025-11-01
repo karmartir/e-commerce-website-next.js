@@ -2,10 +2,11 @@
 
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Plus, Minus } from "lucide-react";
+import { Plus, Minus, Loader } from "lucide-react";
 import { Cart, CartItem } from "@/types";
 import { toast } from "sonner";
 import { addItemToCart, removeItemFromCart } from "@/lib/actions/cart.actions";
+import { useTransition } from "react";
 
 /**
  * A reusable toast function for both success and error messages.
@@ -58,40 +59,75 @@ const showToast = (
 
 const AddToCart = ({ cart, item }: { cart?: Cart; item: CartItem }) => {
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
 
   const handleAddCart = async () => {
-    const res = await addItemToCart(item);
-    if (!res.success) {
-      showToast(res.message, { success: false });
-      return;
-    }
-    showToast(res.message, { success: true, viewCart: true, router });
+    startTransition(async () => {
+      const res = await addItemToCart(item);
+      if (!res.success) {
+        showToast(res.message, { success: false });
+        return;
+      }
+      showToast(res.message, { success: true, viewCart: true, router });
+    });
   };
 
   const handleRemoveFromCart = async () => {
-    const res = await removeItemFromCart(item.productId);
-    if (!res.success) {
-      showToast(res.message, { success: false });
-      return;
-    }
-    showToast(res.message, { success: true });
+    startTransition(async () => {
+      const res = await removeItemFromCart(item.productId);
+      if (!res.success) {
+        showToast(res.message, { success: false });
+        return;
+      }
+      showToast(res.message, { success: true });
+    });
   };
 
   const existItem = cart?.items.find((x) => x.productId === item.productId);
 
   return existItem ? (
     <div>
-      <Button type="button" variant="outline" onClick={handleRemoveFromCart}>
-        <Minus className="h-4 w-4" />
+      <Button
+        type="button"
+        variant="outline"
+        onClick={handleRemoveFromCart}
+        disabled={isPending}
+      >
+        {isPending ? (
+          <Loader className="h-4 w-4 animate-spin" />
+        ) : (
+          <Minus className="h-4 w-4" />
+        )}
       </Button>
       <span className="px-2">{existItem.qty}</span>
-      <Button type="button" variant="outline" onClick={handleAddCart}>
-        <Plus className="h-4 w-4" />
+      <Button
+        type="button"
+        variant="outline"
+        onClick={handleAddCart}
+        disabled={isPending}
+      >
+        {isPending ? (
+          <Loader className="h-4 w-4 animate-spin" />
+        ) : (
+          <Plus className="h-4 w-4" />
+        )}
       </Button>
     </div>
   ) : (
-    <Button className="w-full" type="button" onClick={handleAddCart}>
-      Add to cart
+    <Button
+      className="w-full"
+      type="button"
+      onClick={handleAddCart}
+      disabled={isPending}
+    >
+      {isPending ? (
+        <>
+          <Loader className="h-4 w-4 animate-spin" />
+          Adding...
+        </>
+      ) : (
+        "Add to Cart"
+      )}
     </Button>
   );
 };
