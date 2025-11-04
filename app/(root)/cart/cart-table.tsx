@@ -16,8 +16,9 @@ import {
   TableCell,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { type } from "./../../../types/index";
-import { start } from "repl";
+import { formatCurrency } from "@/lib/utils";
+import { Card, CardContent } from "@/components/ui/card";
+import { is } from "zod/v4/locales";
 
 const CartTable = ({ cart }: { cart?: Cart }) => {
   const router = useRouter();
@@ -32,7 +33,7 @@ const CartTable = ({ cart }: { cart?: Cart }) => {
         </div>
       ) : (
         <div className="grid md:grid-cols-4 md:gap-5">
-          <div className="overflow-x-auto md:col-span-5">
+          <div className="overflow-x-auto md:col-span-3">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -112,6 +113,34 @@ const CartTable = ({ cart }: { cart?: Cart }) => {
               </TableBody>
             </Table>
           </div>
+          <Card>
+            <CardContent className="p-4 gap-4">
+              <div className="pb-3 text-lg">
+                <span>
+                  Subtotal: ({cart.items.reduce((a, b) => a + b.qty, 0)})
+                </span>
+                <span className="font-bold px-1">
+                  {formatCurrency(cart.itemsPrice)}
+                </span>
+              </div>
+              <Button
+                className="w-full"
+                disabled={isPending}
+                onClick={() => {
+                  startTransition(() => router.push("/shipping-address"));
+                }}
+              >
+                {isPending ? (
+                  <Loader className="animate-spin" size={14} />
+                ) : (
+                  <>
+                    Proceed to Checkout{" "}
+                    <ArrowRight className="ml-2" size={14} />
+                  </>
+                )}
+              </Button>
+            </CardContent>
+          </Card>
         </div>
       )}
     </>
