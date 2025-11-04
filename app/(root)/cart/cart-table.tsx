@@ -18,7 +18,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
-import { is } from "zod/v4/locales";
 
 const CartTable = ({ cart }: { cart?: Cart }) => {
   const router = useRouter();
