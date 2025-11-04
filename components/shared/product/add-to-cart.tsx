@@ -48,7 +48,7 @@ const showToast = (
         {viewCart && router && (
           <Button
             size="sm"
-            className="variant-primary bg-gray-900 text-white hover:bg-gray-700 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-300"
+            className="variant-primary me-5 bg-gray-900 text-white hover:bg-gray-700 dark:bg-gray-100 dark:text-gray-900 dark:hover:bg-gray-300"
             onClick={() => {
               router.push("/cart");
               toast.dismiss(t);

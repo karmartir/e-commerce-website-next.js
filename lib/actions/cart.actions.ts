@@ -25,6 +25,7 @@ const calcPrice = (items: CartItem[]) => {
   };
 };
 
+// Add item to cart
 export async function addItemToCart(data: CartItem) {
   try {
     // Check for the cart cookie
@@ -109,6 +110,7 @@ export async function addItemToCart(data: CartItem) {
   }
 }
 
+// Get my cart
 export const getMyCart = async () => {
   const sessionCartId = (await cookies()).get("sessionCartId")?.value;
   if (!sessionCartId) throw new Error("No session cart ID found");
