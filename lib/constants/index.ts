@@ -17,10 +17,12 @@ export const signUpDefaultValues = {
   confirmPassword: "",
 };
 
+//For deployment I use empty strings and for local development .env variables
+// You can use your own values or leave them empty
 export const shippingAddressDefaultValues = {
-  fullName: "John Doe",
-  address: "West Street, 123",
-  city: "Brooklyn",
-  postalCode: "11235",
-  country: "USA",
+  fullName: process.env.NEXT_PUBLIC_FULL_NAME || "",
+  streetAddress: process.env.NEXT_PUBLIC_ADDRESS || "",
+  city: process.env.NEXT_PUBLIC_CITY || "",
+  postalCode: process.env.NEXT_PUBLIC_POSTAL_CODE || "",
+  country: process.env.NEXT_PUBLIC_COUNTRY || "",
 };
