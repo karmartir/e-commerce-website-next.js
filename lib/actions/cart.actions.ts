@@ -28,11 +28,18 @@ const calcPrice = (items: CartItem[]) => {
 // Add item to cart
 export async function addItemToCart(data: CartItem) {
   try {
-    // Check for the cart cookie
-    const sessionCartId = (await cookies()).get("sessionCartId")?.value;
-    // If no cart cookie, throw an error
+    const cookieStore = await cookies();
+    let sessionCartId = cookieStore.get("sessionCartId")?.value;
+
+    // 🟢 FIX 1: If guest has no cookie, create one instead of throwing an error
     if (!sessionCartId) {
-      throw new Error("No session cart ID found");
+      sessionCartId = crypto.randomUUID();
+      cookieStore.set("sessionCartId", sessionCartId, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+      });
     }
     // Get session and user Id
     const session = await auth();
@@ -112,19 +119,20 @@ export async function addItemToCart(data: CartItem) {
 
 // Get my cart
 export const getMyCart = async () => {
-  const sessionCartId = (await cookies()).get("sessionCartId")?.value;
-  if (!sessionCartId) throw new Error("No session cart ID found");
+  const cookieStore = await cookies();
+  const sessionCartId = cookieStore.get("sessionCartId")?.value;
 
-  // Get session and user Id
+  // 🟢 FIX 3: Don't throw error if guest has no cart yet
+  if (!sessionCartId) return undefined;
+
   const session = await auth();
   const userId = session?.user?.id ? (session.user.id as string) : undefined;
 
-  // Get user cart from database
+  // 🟢 FIX 4: Correct where clause — must check userId OR sessionCartId
   const cart = await prisma.cart.findFirst({
-    where: {
-      userId: userId ? userId : sessionCartId,
-    },
+    where: userId ? { userId } : { sessionCartId },
   });
+
   if (!cart) return undefined;
 
   // Convert decimals and return cart
