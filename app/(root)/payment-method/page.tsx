@@ -5,7 +5,6 @@ import PaymentMethodForm from "./payment-method-form";
 
 export const metadata: Metadata = {
   title: "Select Payment Method",
-  description: "Enter your payment method",
 };
 const PaymentMethodPage = async () => {
   const session = await auth();

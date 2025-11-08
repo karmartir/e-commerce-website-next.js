@@ -5,7 +5,7 @@ import { useTransition } from "react";
 import { paymentMethodSchema } from "@/lib/validators";
 import CheckoutSteps from "@/components/shared/checkout-steps";
 import { useForm } from "react-hook-form";
-import z from "zod";
+import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { DEFAULT_PAYMENT_METHOD } from "@/lib/constants";
 const PaymentMethodForm = ({
@@ -14,7 +14,6 @@ const PaymentMethodForm = ({
   preferredPaymentMethod: string | null;
 }) => {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof paymentMethodSchema>>({
     resolver: zodResolver(paymentMethodSchema),
@@ -22,6 +21,7 @@ const PaymentMethodForm = ({
       type: preferredPaymentMethod || DEFAULT_PAYMENT_METHOD,
     },
   });
+  const [isPending, startTransition] = useTransition();
 
   return (
     <>

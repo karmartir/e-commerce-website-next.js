@@ -96,6 +96,6 @@ export const paymentMethodSchema = z
     paymentMethod: z.string().min(1, "Payment method is required"),
   })
   .refine((data) => PAYMENT_METHODS.includes(data.type), {
-    message: "Invalid payment method",
     path: ["type"],
+    message: "Invalid payment method",
   });
