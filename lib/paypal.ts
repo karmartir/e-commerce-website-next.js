@@ -11,9 +11,9 @@ async function generateAccessToken(){
         method: "POST",
         headers: {
             "Authorization": `Basic ${auth}`,
-            "Content-Type": "application/x-www-form-urlencoded"
+            "Content-Type": "application/x-www-form-urlencoded",
         },
-       
+        body: new URLSearchParams({ grant_type: "client_credentials" }),
     });
     if(response.ok){
         const jsonData = await response.json();
@@ -24,3 +24,4 @@ async function generateAccessToken(){
     }
 }       
     
+export { generateAccessToken };
