@@ -1,5 +1,3 @@
-import { ca } from "zod/v4/locales";
-
 const base = process.env.PAYPAL_API_URL || "https://api-m.sandbox.paypal.com";
 const clientId = process.env.PAYPAL_CLIENT_ID || "";
 const clientSecret = process.env.PAYPAL_CLIENT_SECRET || "";
