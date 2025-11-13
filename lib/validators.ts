@@ -1,4 +1,4 @@
-import { email, z } from "zod";
+import { z } from "zod";
 import { formatNumberWithDecimal } from "./utils";
 import { PAYMENT_METHODS } from "./constants";
 
@@ -123,9 +123,10 @@ export const insertOrderItemSchema = z.object({
   qty: z.number().int().nonnegative("Quantity must be a positive number"),
 });
 
+// Schema for payment result
 export const paymentResultSchema = z.object({
-  paymentId: z.string(),
+  id: z.string(),
   status: z.string(),
-  email: z.string(),
+  email_address: z.string(),
   pricePaid: z.string(),
 })

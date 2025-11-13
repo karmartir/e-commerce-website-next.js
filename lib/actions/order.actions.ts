@@ -9,7 +9,7 @@ import { insertOrderSchema } from "../validators";
 import { prisma } from "@/db/prisma";
 import { CartItem, PaymentResult } from "@/types";
 import { paypal } from "../paypal";
-import {revalidatePath} from "next/cache";
+import { revalidatePath } from "next/cache";
 
 //Create Order and create the order items
 
@@ -114,29 +114,126 @@ export async function createPayPalOrder(orderId: string) {
       where: { id: orderId },
     });
     if (!order) {
-      throw new Error("Order not found")
+      throw new Error("Order not found");
     } else {
       // Create the paypal order
       const paypalOrder = await paypal.createOrder(Number(order.totalPrice));
       // Update the order with the paypal order id
-      const updatedOrder = await prisma.order.update({
+      await prisma.order.update({
         where: { id: order.id },
         data: {
           paymentResult: {
-          id: paypalOrder.id,
-          email_address: '',
-          status: '',
-          pricePaid: 0
+            id: paypalOrder.id,
+            email_address: "",
+            status: "",
+            pricePaid: 0,
+          },
         },
-        }
       });
       return {
         success: true,
         message: "Item order created successfully",
-        data: paypalOrder.id
+        data: paypalOrder.id,
       };
     }
   } catch (error) {
     return { success: false, message: formatError(error) };
   }
+}
+
+// Approve paypal order and update order to paid
+export async function approvePayPalOrder(
+  orderId: string,
+  data: { orderId: string }
+) {
+  try {
+    // Get the order from database
+    const order = await prisma.order.findFirst({
+      where: { id: orderId },
+    });
+    if (!order) {
+      throw new Error("Order not found");
+    }
+    const captureData = await paypal.capturePayment(data.orderId);
+    if (
+      !captureData ||
+      captureData.id !== (order.paymentResult as PaymentResult)?.id ||
+      captureData.status !== "COMPLETED"
+    )
+      throw new Error("Error in PayPal payment");
+
+    // Update the order to paid
+    await updateOrderToPaid({ orderId, paymentResult: {
+      id: captureData.id,
+      status: captureData.status,
+      email_address: captureData.payer.email_address,
+      pricePaid: captureData.purchase_units[0]?.payments?.captures[0]?.amount?.value
+    } });
+
+    revalidatePath(`/order/${orderId}`);
+    return {
+      success: true,
+      message: "Your order has been paid successfully",
+    };
+  } catch (error) {
+    return { success: false, message: formatError(error) };
+  }
+}
+
+// Update order to paid
+async function updateOrderToPaid({
+  orderId,
+  paymentResult
+}: {
+  orderId: string;
+  paymentResult: PaymentResult;
+}){
+   // Get the order from database
+    const order = await prisma.order.findFirst({
+      where: { id: orderId },
+      include: {
+        orderitems: true,
+      },
+    });
+    if (!order) {
+      throw new Error("Order not found");
+    }
+    if(order.isPaid) throw new Error("Order already paid");
+    // Transaction to update order and account for product stock
+    await prisma.$transaction(async (tx) => {
+      // iterate over products and update stock
+      for (const item of order.orderitems) {
+        await tx.product.update({
+          where: { id: item.productId },
+          data: {
+            stock: {
+              //decrement: item.qty,
+              increment: -item.qty
+            },
+          },
+        });
+      }
+      // Set the order to paid
+      await tx.order.update({
+        where: { id: order.id },
+        data: {
+          isPaid: true,
+          paidAt: new Date(),
+          paymentResult,
+        },
+      });
+      // Get updated order after transaction
+      const updatedOrder = await prisma.order.findFirst({
+        where: { id: order.id },
+        include: {
+          orderitems: true,
+          user: {select: {email: true, name: true}},
+        },
+
+        }
+      );
+      if (!updatedOrder) {
+        throw new Error("Order not found");
+      }
+    });
 }
