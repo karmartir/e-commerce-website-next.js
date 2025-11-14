@@ -1,6 +1,6 @@
 const base = process.env.PAYPAL_API_URL || "https://api-m.sandbox.paypal.com";
-const clientId = process.env.PAYPAL_CLIENT_ID || "";
-const clientSecret = process.env.PAYPAL_CLIENT_SECRET || "";
+// const clientId = process.env.PAYPAL_CLIENT_ID || "";
+// const clientSecret = process.env.PAYPAL_CLIENT_SECRET || "";
 export const paypal = {
   createOrder: async function createOrder(price: number) {
     const accessToken = await generateAccessToken();
