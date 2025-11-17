@@ -16,10 +16,10 @@ export const authConfig = {
         /\/admin/,
       ];
 
-      // Get pathname from the req URL object
+      // Get the pathname from the req URL object
       const { pathname } = request.nextUrl;
 
-      // Check if user is not authenticated and accessing a protected path
+      // Check if a user is not authenticated and accessing a protected path
       // if (!auth && protectedPaths.some((p) => p.test(pathname))) return false;
       if (!auth && protectedPaths.some((p) => p.test(pathname))) {
         const signInUrl = new URL("/sign-in", request.url);
@@ -29,10 +29,10 @@ export const authConfig = {
 
       // Check for session cart cookie
       if (!request.cookies.get("sessionCartId")) {
-        // Generate new session cart id cookie
+        // Generate a new session cart id cookie
         const sessionCartId = crypto.randomUUID();
 
-        // Create new response and add the new headers
+        // Create a new response and add the new headers
         const response = NextResponse.next({
           request: {
             headers: new Headers(request.headers),

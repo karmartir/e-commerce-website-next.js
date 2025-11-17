@@ -34,7 +34,7 @@ const ProfileForm = () => {
 		const res = await updateProfile(values);
 		
 		if (!res.success) {
-			toast.success(res.message);
+			toast.error(res.message);
 		}
 		
 		const newSession = {

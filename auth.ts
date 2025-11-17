@@ -26,7 +26,7 @@ export const config = {
         // Add logic here to look up the user from the credentials supplied
         if (credentials === null) return null;
 
-        //Find user in database
+        //Find user in a database
         const user = await prisma.user.findFirst({
           where: {
             email: credentials.email as string,
@@ -38,7 +38,7 @@ export const config = {
             credentials.password as string,
             user.password
           );
-          //If password is correct, return the user
+          //If the password is correct, return the user
           if (isMatch) {
             return {
               id: user.id,
@@ -48,7 +48,7 @@ export const config = {
             };
           }
         }
-        //If user is not found or password is incorrect, return null
+        //If a user is not found or the password is incorrect, return null
         return null;
       },
     }),
@@ -60,13 +60,13 @@ export const config = {
       session.user.id = token.sub;
       session.user.role = token.role;
       session.user.name = token.name;
-      //If there is an update, set the user name
+      //If there is an update, set the username
       if (trigger === "update") {
         session.user.name = user.name;
       }
       return session;
     },
-    async jwt({ token, user, trigger }: any) {
+    async jwt({ token, user, trigger, session }: any) {
       // Assign user fields to the token
       if (user) {
         token.id = user.id;
@@ -74,7 +74,7 @@ export const config = {
         // If user has no name then use the email
         if (user.name === "NO_NAME") {
           token.name = user.email!.split("@")[0];
-          // Update database with new name
+          // Update database with a new name
           await prisma.user.update({
             where: { id: user.id },
             data: { name: token.name },
@@ -101,6 +101,12 @@ export const config = {
             }
           }
         }
+      }
+			
+
+      // Handle session updates: update token name when user updates profile
+      if (trigger === "update" && session?.user.name) {
+        token.name = session.user.name;
       }
       return token;
     },
