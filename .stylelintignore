@@ -1,0 +1,17 @@
+# Ignore all non-CSS files
+**/*.tsx
+**/*.ts
+**/*.js
+**/*.jsx
+**/*.json
+**/*.md
+**/node_modules/**
+**/.next/**
+**/out/**
+**/build/**
+**/dist/**
+**/*.config.*
+**/prisma/**
+**/tests/**
+
+

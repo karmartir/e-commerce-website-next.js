@@ -1,3 +1,15 @@
 {
-  "cSpell.words": ["orderitems", "Updateitems"]
+  "stylelint.validate": [
+    "css",
+    "scss",
+    "postcss"
+  ],
+  "stylelint.snippet": [
+    "css",
+    "scss",
+    "postcss"
+  ],
+  "css.validate": false,
+  "scss.validate": false,
+  "less.validate": false
 }
