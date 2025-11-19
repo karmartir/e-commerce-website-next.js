@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4adaadf5-a1a2-4927-8489-ae123a1e167f" name="Changes" comment="91. Update Profile Form">
+    <list default="true" id="4adaadf5-a1a2-4927-8489-ae123a1e167f" name="Changes" comment="92. Profile Form Submission">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/user/profile/profile-form.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/user/profile/profile-form.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/auth.config.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/auth.ts" beforeDir="false" afterPath="$PROJECT_DIR$/auth.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -30,6 +27,9 @@
     &quot;accountId&quot;: &quot;5935036e-9e88-4fb8-9776-93215766b244&quot;
   }
 }</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
   <component name="ProjectColorInfo">{
   &quot;customColor&quot;: &quot;&quot;,
   &quot;associatedIndex&quot;: 0
@@ -104,7 +104,7 @@
       <workItem from="1761695656059" duration="209000" />
       <workItem from="1761789851393" duration="3000" />
       <workItem from="1763339159506" duration="89000" />
-      <workItem from="1763339298433" duration="3600000" />
+      <workItem from="1763339298433" duration="4276000" />
     </task>
     <task id="LOCAL-00001" summary="91. Update Profile Form">
       <option name="closed" value="true" />
@@ -114,7 +114,15 @@
       <option name="project" value="LOCAL" />
       <updated>1763339845062</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="92. Profile Form Submission">
+      <option name="closed" value="true" />
+      <created>1763344232141</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1763344232141</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -133,6 +141,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="91. Update Profile Form" />
-    <option name="LAST_COMMIT_MESSAGE" value="91. Update Profile Form" />
+    <MESSAGE value="92. Profile Form Submission" />
+    <option name="LAST_COMMIT_MESSAGE" value="92. Profile Form Submission" />
   </component>
 </project>
