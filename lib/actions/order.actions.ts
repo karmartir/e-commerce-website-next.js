@@ -11,6 +11,7 @@ import { CartItem, PaymentResult } from "@/types";
 import { paypal } from "../paypal";
 import { revalidatePath } from "next/cache";
 import { PAGE_SIZE } from "../constants";
+import { Prisma } from "@prisma/client";
 
 //Create Order and create the order items
 
@@ -164,12 +165,16 @@ export async function approvePayPalOrder(
       throw new Error("Error in PayPal payment");
 
     // Update the order to paid
-    await updateOrderToPaid({ orderId, paymentResult: {
-      id: captureData.id,
-      status: captureData.status,
-      email_address: captureData.payer.email_address,
-      pricePaid: captureData.purchase_units[0]?.payments?.captures[0]?.amount?.value
-    } });
+    await updateOrderToPaid({
+      orderId,
+      paymentResult: {
+        id: captureData.id,
+        status: captureData.status,
+        email_address: captureData.payer.email_address,
+        pricePaid:
+          captureData.purchase_units[0]?.payments?.captures[0]?.amount?.value,
+      },
+    });
 
     revalidatePath(`/order/${orderId}`);
     return {
@@ -184,84 +189,129 @@ export async function approvePayPalOrder(
 // Update order to paid
 async function updateOrderToPaid({
   orderId,
-  paymentResult
+  paymentResult,
 }: {
   orderId: string;
   paymentResult: PaymentResult;
-}){
-   // Get the order from database
-    const order = await prisma.order.findFirst({
-      where: { id: orderId },
-      include: {
-        orderitems: true,
-      },
-    });
-    if (!order) {
-      throw new Error("Order not found");
-    }
-    if(order.isPaid) throw new Error("Order already paid");
-    // Transaction to update order and account for product stock
-    await prisma.$transaction(async (tx) => {
-      // iterate over products and update stock
-      for (const item of order.orderitems) {
-        await tx.product.update({
-          where: { id: item.productId },
-          data: {
-            stock: {
-              //decrement: item.qty,
-              increment: -item.qty
-            },
-          },
-        });
-      }
-      // Set the order to paid
-      await tx.order.update({
-        where: { id: order.id },
+}) {
+  // Get the order from database
+  const order = await prisma.order.findFirst({
+    where: { id: orderId },
+    include: {
+      orderitems: true,
+    },
+  });
+  if (!order) {
+    throw new Error("Order not found");
+  }
+  if (order.isPaid) throw new Error("Order already paid");
+  // Transaction to update order and account for product stock
+  await prisma.$transaction(async (tx) => {
+    // iterate over products and update stock
+    for (const item of order.orderitems) {
+      await tx.product.update({
+        where: { id: item.productId },
         data: {
-          isPaid: true,
-          paidAt: new Date(),
-          paymentResult,
+          stock: {
+            //decrement: item.qty,
+            increment: -item.qty,
+          },
         },
       });
-      // Get updated order after transaction
-      const updatedOrder = await prisma.order.findFirst({
-        where: { id: order.id },
-        include: {
-          orderitems: true,
-          user: {select: {email: true, name: true}},
-        },
-
-        }
-      );
-      if (!updatedOrder) {
-        throw new Error("Order not found");
-      }
+    }
+    // Set the order to paid
+    await tx.order.update({
+      where: { id: order.id },
+      data: {
+        isPaid: true,
+        paidAt: new Date(),
+        paymentResult,
+      },
     });
+    // Get updated order after transaction
+    const updatedOrder = await prisma.order.findFirst({
+      where: { id: order.id },
+      include: {
+        orderitems: true,
+        user: { select: { email: true, name: true } },
+      },
+    });
+    if (!updatedOrder) {
+      throw new Error("Order not found");
+    }
+  });
 }
 
 // Get user's orders
 export async function getMyOrders({
-  limit= PAGE_SIZE,
+  limit = PAGE_SIZE,
   page,
 }: {
   limit?: number;
   page: number;
 }) {
-const session = await auth();
-const userId = session?.user?.id;
-if (!userId) throw new Error("User not authenticated");
-const data = await prisma.order.findMany({
-  where: { userId},
-  orderBy: { createdAt: "desc" },
-  take: limit,
-  skip: (page - 1) * limit,
+  const session = await auth();
+  const userId = session?.user?.id;
+  if (!userId) throw new Error("User not authenticated");
+  const data = await prisma.order.findMany({
+    where: { userId },
+    orderBy: { createdAt: "desc" },
+    take: limit,
+    skip: (page - 1) * limit,
   });
   const dataCount = await prisma.order.count({
-    where: { userId}
+    where: { userId },
   });
   return {
     data,
     totalPages: Math.ceil(dataCount / limit),
   };
-  
+}
+
+type SalesDataType = {
+  month: string;
+  totalSales: number;
+}[];
+
+// Get sales data and order summary
+export async function gerOrderSummary() {
+  //Get counts for each resource
+  const ordersCount = await prisma.order.count();
+  const productsCount = await prisma.product.count();
+  const usersCount = await prisma.user.count();
+
+  //Calculate the total sales
+  const totalSales = await prisma.order.aggregate({
+    _sum: {
+      totalPrice: true,
+    },
+  });
+  // Get monthly sales
+  const salesDataRaw = await prisma.$queryRaw<
+    Array<{ month: string; totalSales: Prisma.Decimal }>
+  >`SELECT to_char(createdAt, 'MM-YY') as "month", sum("totalPrice") as "totalSales" FROM
+  "Order" GROUP BY to_char("createdAt", 'MM-YY')`;
+
+  const salesData: SalesDataType = salesDataRaw.map((entry) => ({
+    month: entry.month,
+    totalSales: entry.totalSales.toNumber(),
+  }));
+
+  // Get latest sales
+  const latestSales = await prisma.order.findMany({
+    orderBy: { createdAt: "desc" },
+    include: {
+      user: { select: { name: true } },
+    },
+    take: 6,
+  });
+
+  return {
+    ordersCount,
+    productsCount,
+    usersCount,
+    totalSales,
+    latestSales,
+    salesData,
+  };
 }
