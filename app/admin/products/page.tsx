@@ -1,6 +1,8 @@
 import React from 'react'
+import { requireAdmin } from "@/lib/auth-guard";
 
-const ProductsPage = () => {
+const ProductsPage = async () => {
+  await requireAdmin();
   return (
     <div>
       Products test page here
