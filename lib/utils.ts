@@ -66,16 +66,23 @@ const CURRENCY_FORMATTER = new Intl.NumberFormat("en-US", {
   minimumFractionDigits: 2,
 });
 //Format currency using the formatter above
-export function formatCurrency(amount: number | string | null) {
+export function formatCurrency(amount: number | string | null | { toNumber?: () => number }) {
   if (typeof amount === "number") {
     return CURRENCY_FORMATTER.format(amount);
   } else if (typeof amount === "string") {
     return CURRENCY_FORMATTER.format(Number(amount));
+  } else if (amount && typeof amount === "object" && typeof amount.toNumber === "function") {
+    return CURRENCY_FORMATTER.format(amount.toNumber());
   } else {
     return "NaN";
   }
 }
 
+// Format number with commas
+const NUMBER_FORMATTER = new Intl.NumberFormat("en-US");
+export function formatNumber(number: number) {
+  return NUMBER_FORMATTER.format(number);
+}
 // Shorten UUID
 export function formatId(id: string) {
   return `..${id.substring(id.length - 6)}`;

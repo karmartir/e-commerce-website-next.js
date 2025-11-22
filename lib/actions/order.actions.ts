@@ -274,7 +274,7 @@ type SalesDataType = {
 }[];
 
 // Get sales data and order summary
-export async function gerOrderSummary() {
+export async function getOrderSummary() {
   //Get counts for each resource
   const ordersCount = await prisma.order.count();
   const productsCount = await prisma.product.count();
