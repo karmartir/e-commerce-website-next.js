@@ -12,6 +12,7 @@ import { paypal } from "../paypal";
 import { revalidatePath } from "next/cache";
 import { PAGE_SIZE } from "../constants";
 import { Prisma } from "@prisma/client";
+import { requireAdmin } from "../auth-guard";
 
 //Create Order and create the order items
 
@@ -335,4 +336,20 @@ export async function getAllOrders({
     data,
     totalPages: Math.ceil(dataCount / limit),
   };
+}
+
+// Delete an order
+export async function deleteOrder(id: string){
+  try {
+    await requireAdmin()
+    await prisma.order.delete({where: {id}});
+    revalidatePath('/admin/orders');
+    return {
+      success: true,
+      message: 'Order deleted successfully'
+    }
+  } catch (error) {
+    if (isRedirectError(error)) throw error;
+    return {success: false, message: formatError(error)}
+  }
 }
