@@ -25,8 +25,8 @@ const OrdersPage = async (props: {
     page: Number(page) || 1,
   });
 	const session = await auth();
-	const name = session?.user?.name || "My";
-	const displayName = name.endsWith("s") ? `${name}'` : `${name}'s`;
+	if (!session || !session.user.name) throw new Error("Unauthorized or user name missing");
+	const displayName = session.user.name.endsWith("s") ? `${session.user.name}'` : `${session.user.name}'s`;
   return (
     <div className="space-y-2">
       <h2 className="h2-bold">{displayName} Orders</h2>
