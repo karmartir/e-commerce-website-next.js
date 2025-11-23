@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4adaadf5-a1a2-4927-8489-ae123a1e167f" name="Changes" comment="92. Profile Form Submission">
+    <list default="true" id="4adaadf5-a1a2-4927-8489-ae123a1e167f" name="Changes" comment="102. Update Order Buttons(COD)">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(root)/order/[id]/order-details-table.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(root)/order/[id]/order-details-table.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/(root)/order/[id]/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/(root)/order/[id]/page.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/user/orders/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/user/orders/page.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -107,7 +106,7 @@
       <workItem from="1761789851393" duration="3000" />
       <workItem from="1763339159506" duration="89000" />
       <workItem from="1763339298433" duration="4276000" />
-      <workItem from="1763922324521" duration="1725000" />
+      <workItem from="1763922324521" duration="2541000" />
     </task>
     <task id="LOCAL-00001" summary="91. Update Profile Form">
       <option name="closed" value="true" />
@@ -125,7 +124,15 @@
       <option name="project" value="LOCAL" />
       <updated>1763344232141</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="102. Update Order Buttons(COD)">
+      <option name="closed" value="true" />
+      <created>1763924229557</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1763924229557</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -145,6 +152,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="91. Update Profile Form" />
     <MESSAGE value="92. Profile Form Submission" />
-    <option name="LAST_COMMIT_MESSAGE" value="92. Profile Form Submission" />
+    <MESSAGE value="102. Update Order Buttons(COD)" />
+    <option name="LAST_COMMIT_MESSAGE" value="102. Update Order Buttons(COD)" />
   </component>
 </project>

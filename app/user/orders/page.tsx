@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { auth } from "@/auth";
 import { getMyOrders } from "@/lib/actions/order.actions";
 import { formatCurrency, formatDateTime, formatId } from "@/lib/utils";
 import Link from "next/link";
@@ -23,9 +24,12 @@ const OrdersPage = async (props: {
   const orders = await getMyOrders({
     page: Number(page) || 1,
   });
+	const session = await auth();
+	const name = session?.user?.name || "My";
+	const displayName = name.endsWith("s") ? `${name}'` : `${name}'s`;
   return (
     <div className="space-y-2">
-      <h2 className="h2-bold">Orders</h2>
+      <h2 className="h2-bold">{displayName} Orders</h2>
       <div className="overflow-x-auto">
         <Table>
           <TableHeader>
