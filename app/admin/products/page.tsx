@@ -1,7 +1,7 @@
 import React from "react";
 import { requireAdmin } from "@/lib/auth-guard";
 import Link from "next/link";
-import { getAllProducts } from "@/lib/actions/product.actions";
+import { getAllProducts, deleteProduct } from "@/lib/actions/product.actions";
 import { formatCurrency, formatId } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,6 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Pagination from "@/components/shared/pagination";
+import DeleteDialog from "@/components/shared/delete-dialog"; 
 
 const AdminProductsPage = async (props: {
   searchParams: Promise<{
@@ -40,7 +41,7 @@ const AdminProductsPage = async (props: {
           <Link href="/admin/products/create">Create Product</Link>
         </Button>
       </div>
-      <Table>
+      <Table className="mt-5">
         <TableHeader>
           <TableRow>
             <TableHead>ID</TableHead>
@@ -66,8 +67,8 @@ const AdminProductsPage = async (props: {
                   <Link href={`/admin/products/${product.id}`}>
                   Edit
                   </Link>
-                  {/* TODO delete button */}
                 </Button>
+                <DeleteDialog id={product.id} action={deleteProduct}/>
               </TableCell>
 
             </TableRow>
