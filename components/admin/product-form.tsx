@@ -23,7 +23,7 @@ import {
 import slugify from "slugify";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-// import { Textarea } from '../ui/textarea';
+import { Textarea } from '../ui/textarea';
 import { createProduct, updateProduct } from "@/lib/actions/product.actions";
 import { Card, CardContent } from "../ui/card";
 import Image from "next/image";
@@ -114,18 +114,130 @@ const ProductForm = ({
         </div>
         <div className="flex flex-col md:flex-row gap-5">
           {/* {category} */}
+          <FormField
+            control={form.control}
+            name='category'
+            render={({
+              field,
+            }: {
+              field: ControllerRenderProps<
+              z.infer<typeof insertProductSchema>,
+              'category'
+              >;
+            }) => (
+              <FormItem className="w-full">
+              <FormLabel>Category</FormLabel>
+              <FormControl>
+               <Input placeholder="Enter category" {...field} />
+              </FormControl>
+              </FormItem>
+            )}
+          
+          />  
           {/* {brand} */}
+          <FormField
+          control={form.control}
+          name='brand'
+          render={({
+            field,
+          }: {
+            field: ControllerRenderProps<
+            z.infer<typeof insertProductSchema>,
+            'brand'
+            >;
+          }) => (
+            <FormItem className="w-full">
+            <FormLabel>Brand</FormLabel>
+            <FormControl>
+             <Input placeholder="Enter brand" {...field} />
+            </FormControl>
+            </FormItem>
+          )}
+        
+        />  
         </div>
         <div className="flex flex-col md:flex-row gap-5">
           {/* {Price} */}
+          <FormField
+          control={form.control}
+          name='price'
+          render={({
+            field,
+          }: {
+            field: ControllerRenderProps<
+            z.infer<typeof insertProductSchema>,
+            'price'
+            >;
+          }) => (
+            <FormItem className="w-full">
+            <FormLabel>Price</FormLabel>
+            <FormControl>
+             <Input placeholder="Enter product price" {...field} />
+            </FormControl>
+            </FormItem>
+          )}
+        
+        />  
           {/* {Stock} */}
+          <FormField
+          control={form.control}
+          name='stock'
+          render={({
+            field,
+          }: {
+            field: ControllerRenderProps<
+            z.infer<typeof insertProductSchema>,
+            'stock'
+            >;
+          }) => (
+            <FormItem className="w-full">
+            <FormLabel>Stock</FormLabel>
+            <FormControl>
+             <Input placeholder="Enter stock" {...field} />
+            </FormControl>
+            </FormItem>
+          )}
+        
+        />  
         </div>
         <div className="upload-field flex flex-col md:flex-row gap-5">
           {/* {images} */}
         </div>
         <div className="upload-field">{/*isFeatured*/}</div>
-        <div className="upload-field">{/*Description*/}</div>
-        <div className="upload-field">{/*Submit*/}</div>
+        <div className="upload-field">
+        {/*Description*/}
+        <FormField
+        control={form.control}
+        name='description'
+        render={({
+          field,
+        }: {
+          field: ControllerRenderProps<
+          z.infer<typeof insertProductSchema>,
+          'description'
+          >;
+        }) => (
+          <FormItem className="w-full">
+          <FormLabel>Description</FormLabel>
+          <FormControl>
+           <Textarea
+            placeholder="Enter product description" {...field} 
+            className="resize-none"
+            />
+          </FormControl>
+          </FormItem>
+        )}
+      
+      />  
+        </div>
+        <div className="upload-field">
+        {/*Submit*/}
+        <Button type="submit" size='lg' disabled={form.formState.isSubmitting}
+         className="button cole-span-2 w-full"
+        >
+        {form.formState.isSubmitting ? 'Submitting' : `${type} Product`}
+        </Button>
+        </div>
       </form>
     </Form>
   );
