@@ -3,14 +3,14 @@ import { prisma } from "@/db/prisma";
 import { convertToPlainObject, formatError } from "../utils";
 import { LATEST_PRODUCTS_LIMIT, PAGE_SIZE } from "../constants";
 import { revalidatePath } from "next/cache";
-import { insertProductSchema, updateProductsSchema } from "../validators";
+import { insertProductSchema, updateProductSchema } from "../validators";
 import {z} from "zod";
 
+// get latest products
 export async function getLatestProducts() {
-  // get latest products
   const data = await prisma.product.findMany({
-    orderBy: { createdAt: "desc" },
     take: LATEST_PRODUCTS_LIMIT,
+    orderBy: { createdAt: "desc" },
   });
 
   // Convert to plain object from prisma via utils
@@ -28,11 +28,17 @@ export async function getAllProducts({
   limit = PAGE_SIZE,
   page,
   category,
+  price,
+  rating,
+  sort,
 }: {
   query: string;
   limit?: number;
   page: number;
   category?: string;
+  price?: string;
+  rating?: string;
+  sort?: string;
 }) {
   const data = await prisma.product.findMany({
     skip: (page - 1) * limit,
@@ -73,9 +79,9 @@ export async function createProduct(data: z.infer<typeof insertProductSchema>){
 }
 
 // Update a product
-export async function updateProduct(data: z.infer<typeof updateProductsSchema>){
+export async function updateProduct(data: z.infer<typeof updateProductSchema>){
   try {
-    const product = updateProductsSchema.parse(data);
+    const product = updateProductSchema.parse(data);
     const productExists = await prisma.product.findFirst({
       where: {id: product.id}
     })

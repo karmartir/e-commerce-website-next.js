@@ -27,7 +27,7 @@ export const insertProductSchema = z.object({
 });
 
 // Schema for updating products
-export const updateProductsSchema =  insertProductSchema.extend({
+export const updateProductSchema =  insertProductSchema.extend({
   id: z.string().min(1, 'Id is required')
 })
 
