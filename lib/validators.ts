@@ -26,6 +26,11 @@ export const insertProductSchema = z.object({
   brand: z.string(),
 });
 
+// Schema for updating products
+export const updateProductsSchema =  insertProductSchema.extend({
+  id: z.string().min(1, 'Id is required')
+})
+
 // Schema for signing users in
 export const signInFormSchema = z.object({
   email: z.string().refine((val) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val), {
