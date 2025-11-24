@@ -15,7 +15,7 @@ import Pagination from "@/components/shared/pagination";
 import { Button } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-  title: "MyOrders",
+  title: "My Orders",
 };
 const OrdersPage = async (props: {
   searchParams: Promise<{ page: string }>;

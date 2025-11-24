@@ -21,7 +21,7 @@ const AdminOrdersPage = async (props: {
 
   return (
     <div className="space-y-2">
-    <h2 className="h2-bold">Orders</h2>
+    <h2 className="h2-bold">Admin Orders Dashboard</h2>
     <div className="overflow-x-auto">
       <Table>
         <TableHeader>

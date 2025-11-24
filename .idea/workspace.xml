@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4adaadf5-a1a2-4927-8489-ae123a1e167f" name="Changes" comment="feat: personalize orders page with dynamic username heading">
+    <list default="true" id="4adaadf5-a1a2-4927-8489-ae123a1e167f" name="Changes" comment="feat: personalize orders page heading with user name and correct possessive">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/user/orders/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/app/user/orders/page.tsx" afterDir="false" />
     </list>
@@ -106,7 +106,7 @@
       <workItem from="1761789851393" duration="3000" />
       <workItem from="1763339159506" duration="89000" />
       <workItem from="1763339298433" duration="4276000" />
-      <workItem from="1763922324521" duration="3595000" />
+      <workItem from="1763922324521" duration="4781000" />
     </task>
     <task id="LOCAL-00001" summary="91. Update Profile Form">
       <option name="closed" value="true" />
@@ -140,7 +140,15 @@
       <option name="project" value="LOCAL" />
       <updated>1763925151486</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="feat: personalize orders page heading with user name and correct possessive">
+      <option name="closed" value="true" />
+      <created>1763926252320</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1763926252320</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -162,6 +170,7 @@
     <MESSAGE value="92. Profile Form Submission" />
     <MESSAGE value="102. Update Order Buttons(COD)" />
     <MESSAGE value="feat: personalize orders page with dynamic username heading" />
-    <option name="LAST_COMMIT_MESSAGE" value="feat: personalize orders page with dynamic username heading" />
+    <MESSAGE value="feat: personalize orders page heading with user name and correct possessive" />
+    <option name="LAST_COMMIT_MESSAGE" value="feat: personalize orders page heading with user name and correct possessive" />
   </component>
 </project>
