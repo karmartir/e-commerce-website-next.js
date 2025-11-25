@@ -11,5 +11,8 @@
   ],
   "css.validate": false,
   "scss.validate": false,
-  "less.validate": false
+  "less.validate": false,
+  "cSpell.words": [
+    "Uploadthing"
+  ]
 }
