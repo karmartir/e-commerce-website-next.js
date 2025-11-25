@@ -26,8 +26,9 @@ import { Button } from "../ui/button";
 import { Textarea } from '../ui/textarea';
 import { createProduct, updateProduct } from "@/lib/actions/product.actions";
 import { Card, CardContent } from "../ui/card";
+import { UploadButton } from '@/lib/uploadthing';
 import Image from "next/image";
-import {toast} from "sonner";
+import { toast } from "sonner";
 // import { Checkbox } from '../ui/checkbox';
 
 type ProductFormValues = z.infer<typeof insertProductSchema>;
@@ -48,33 +49,53 @@ const ProductForm = ({
       product && type === "Update" ? product : productDefaultValues,
   });
 
-  const onSubmit:SubmitHandler<z.infer<typeof insertProductSchema>> = async (values) => {
+  const onSubmit: SubmitHandler<z.infer<typeof insertProductSchema>> = async (values) => {
     //On Create
-    if(type === "Create"){
+    if (type === "Create") {
       const res = await createProduct(values);
-      if(!res.success){
-        toast.error(res.message)  
-    } else {
-      toast.success(res.message)
+      if (!res.success) {
+        toast.error(res.message)
+      } else {
+        toast.success(res.message)
+      }
+      router.push('/admin/products');
     }
-    router.push('/admin/products');
-  }
 
     //On Update
-    if(type === "Update"){
-      if(!productId) {
+    if (type === "Update") {
+      if (!productId) {
         router.push('/admin/products');
         return
       }
-      const res = await updateProduct({...values, id: productId});
-      if(!res.success){
-        toast.error(res.message)  
-    } else {
-      toast.success(res.message)
+      const res = await updateProduct({ ...values, id: productId });
+      if (!res.success) {
+        toast.error(res.message)
+      } else {
+        toast.success(res.message)
+      }
+      router.push('/admin/products');
     }
-    router.push('/admin/products');
   }
- }
+
+  const images = form.watch("images");
+
+  const uploadButtonNew = () => {
+    return (
+      
+      <UploadButton
+        endpoint='imageUploader'
+        className="bg-yellow-500 hover:bg-yellow-600 px-4 py-4 rounded-md"
+        onClientUploadComplete={(res: { url: string; }[]) => {
+          form.setValue('images', [...images, res[0].url])
+        }}
+        onUploadError={(error: Error) => {
+          toast.error(`ERROR! ${error.message}`)
+        }}
+      />
+      
+    )
+  }
+
 
   return (
     <Form {...form}>
@@ -151,122 +172,151 @@ const ProductForm = ({
               field,
             }: {
               field: ControllerRenderProps<
-              z.infer<typeof insertProductSchema>,
-              'category'
+                z.infer<typeof insertProductSchema>,
+                'category'
               >;
             }) => (
               <FormItem className="w-full">
-              <FormLabel>Category</FormLabel>
-              <FormControl>
-               <Input placeholder="Enter category" {...field} />
-              </FormControl>
+                <FormLabel>Category</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter category" {...field} />
+                </FormControl>
               </FormItem>
             )}
-          
-          />  
+
+          />
           {/* {brand} */}
           <FormField
-          control={form.control}
-          name='brand'
-          render={({
-            field,
-          }: {
-            field: ControllerRenderProps<
-            z.infer<typeof insertProductSchema>,
-            'brand'
-            >;
-          }) => (
-            <FormItem className="w-full">
-            <FormLabel>Brand</FormLabel>
-            <FormControl>
-             <Input placeholder="Enter brand" {...field} />
-            </FormControl>
-            </FormItem>
-          )}
-        
-        />  
+            control={form.control}
+            name='brand'
+            render={({
+              field,
+            }: {
+              field: ControllerRenderProps<
+                z.infer<typeof insertProductSchema>,
+                'brand'
+              >;
+            }) => (
+              <FormItem className="w-full">
+                <FormLabel>Brand</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter brand" {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+
+          />
         </div>
         <div className="flex flex-col md:flex-row gap-5">
           {/* {Price} */}
           <FormField
-          control={form.control}
-          name='price'
-          render={({
-            field,
-          }: {
-            field: ControllerRenderProps<
-            z.infer<typeof insertProductSchema>,
-            'price'
-            >;
-          }) => (
-            <FormItem className="w-full">
-            <FormLabel>Price</FormLabel>
-            <FormControl>
-             <Input placeholder="Enter product price" {...field} />
-            </FormControl>
-            </FormItem>
-          )}
-        
-        />  
+            control={form.control}
+            name='price'
+            render={({
+              field,
+            }: {
+              field: ControllerRenderProps<
+                z.infer<typeof insertProductSchema>,
+                'price'
+              >;
+            }) => (
+              <FormItem className="w-full">
+                <FormLabel>Price</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter product price" {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+
+          />
           {/* {Stock} */}
           <FormField
-          control={form.control}
-          name='stock'
-          render={({
-            field,
-          }: {
-            field: ControllerRenderProps<
-            z.infer<typeof insertProductSchema>,
-            'stock'
-            >;
-          }) => (
-            <FormItem className="w-full">
-            <FormLabel>Stock</FormLabel>
-            <FormControl>
-             <Input placeholder="Enter stock" {...field} />
-            </FormControl>
-            </FormItem>
-          )}
-        
-        />  
+            control={form.control}
+            name='stock'
+            render={({
+              field,
+            }: {
+              field: ControllerRenderProps<
+                z.infer<typeof insertProductSchema>,
+                'stock'
+              >;
+            }) => (
+              <FormItem className="w-full">
+                <FormLabel>Stock</FormLabel>
+                <FormControl>
+                  <Input placeholder="Enter stock" {...field} />
+                </FormControl>
+              </FormItem>
+            )}
+
+          />
         </div>
         <div className="upload-field flex flex-col md:flex-row gap-5">
           {/* {images} */}
+          <FormField
+            control={form.control}
+            name="images"
+            render={() => (
+              <FormItem className="w-full">
+                <FormLabel>Images</FormLabel>
+                <Card>
+                  <CardContent className="space-y-2 mt-2 min-h-48">
+                    <div className="flex-start space-x-2">
+                      {images.map((image: string) => (
+                        <Image
+                          key={image}
+                          src={image}
+                          alt="Product Image"
+                          className="w-20 h-20 object-cover object-center rounded-sm"
+                          width={100}
+                          height={100}
+                        />
+                      ))}
+                      <FormControl>
+                        {uploadButtonNew()}
+                      </FormControl>
+                    </div>
+                  </CardContent>
+                </Card>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
         <div className="upload-field">{/*isFeatured*/}</div>
         <div className="upload-field">
-        {/*Description*/}
-        <FormField
-        control={form.control}
-        name='description'
-        render={({
-          field,
-        }: {
-          field: ControllerRenderProps<
-          z.infer<typeof insertProductSchema>,
-          'description'
-          >;
-        }) => (
-          <FormItem className="w-full">
-          <FormLabel>Description</FormLabel>
-          <FormControl>
-           <Textarea
-            placeholder="Enter product description" {...field} 
-            className="resize-none"
-            />
-          </FormControl>
-          </FormItem>
-        )}
-      
-      />  
+          {/*Description*/}
+          <FormField
+            control={form.control}
+            name='description'
+            render={({
+              field,
+            }: {
+              field: ControllerRenderProps<
+                z.infer<typeof insertProductSchema>,
+                'description'
+              >;
+            }) => (
+              <FormItem className="w-full">
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Enter product description" {...field}
+                    className="resize-none"
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+
+          />
         </div>
         <div className="upload-field">
-        {/*Submit*/}
-        <Button type="submit" size='lg' disabled={form.formState.isSubmitting}
-         className="button cole-span-2 w-full"
-        >
-        {form.formState.isSubmitting ? 'Submitting' : `${type} Product`}
-        </Button>
+          {/*Submit*/}
+          <Button type="submit" size='lg' disabled={form.formState.isSubmitting}
+            className="button cole-span-2 w-full"
+          >
+            {form.formState.isSubmitting ? 'Submitting' : `${type} Product`}
+          </Button>
         </div>
       </form>
     </Form>
