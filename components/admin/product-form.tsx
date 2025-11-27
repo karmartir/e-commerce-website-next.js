@@ -24,7 +24,7 @@ import {
 import slugify from "slugify";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { Textarea } from '../ui/textarea';
+import { Textarea } from "../ui/textarea";
 import { createProduct, updateProduct } from "@/lib/actions/product.actions";
 import { Card, CardContent } from "../ui/card";
 import { UploadButton } from "@/lib/uploadthing";
@@ -272,7 +272,7 @@ const ProductForm = ({
               <FormItem className="w-full">
                 <FormLabel>Images</FormLabel>
                 <Card>
-                  <CardContent className="space-y-2 mt-2 min-h-48">
+                  <CardContent className="space-y-2 mt-2 min-h-20">
                     <div className="flex-start space-x-2">
                       {images.map((image: string, index: number) => (
                         <div key={image} className="relative w-20 h-20">
@@ -286,16 +286,7 @@ const ProductForm = ({
                           {/* Delete button */}
                           <button
                             type="button"
-                            className="
-        absolute top-0 right-0 
-      w-5 h-5 flex items-center justify-center 
-        rounded-full 
-        bg-gray-300 dark:bg-gray-400
-        text-white-600 dark:text-black 
-        text-xs 
-        hover:bg-gray-300 dark:hover:bg-gray-500 
-        transition
-      "
+                            className="absolute top-0 right-0 w-5 h-5 flex items-center justify-center rounded-full bg-gray-300 dark:bg-gray-400text-white-600 dark:text-black text-xs hover:bg-gray-300 dark:hover:bg-gray-500 transition"
                             onClick={() => {
                               const newImages = images.filter(
                                 (_, i) => i !== index
@@ -307,7 +298,9 @@ const ProductForm = ({
                           </button>
                         </div>
                       ))}
-                      <FormControl>{uploadButtonNew()}</FormControl>
+                      <FormControl className="w-40">
+                        {uploadButtonNew()}
+                      </FormControl>
                     </div>
                   </CardContent>
                 </Card>
@@ -318,9 +311,9 @@ const ProductForm = ({
         </div>
         <div className="upload-field">
           {/* isFeatured */}
-          Featured Product
+          <FormLabel className="mb-2">Featured Product</FormLabel>
           <Card>
-            <CardContent className="space-y-2 mt-2">
+            <CardContent className="space-y-2">
               <FormField
                 control={form.control}
                 name="isFeatured"
@@ -338,23 +331,26 @@ const ProductForm = ({
                 )}
               />
               {isFeatured && banner && (
-                <Image src={banner} alt="banner image" className="w-full object-cover object-center rounded-sm"
-                width={1920}
-                height={680}
+                <Image
+                  src={banner}
+                  alt="banner image"
+                  className="w-full object-cover object-center rounded-sm"
+                  width={1920}
+                  height={680}
                 />
               )}
 
               {isFeatured && !banner && (
-              <UploadButton
-              endpoint="imageUploader"
-              className="w-30 bg-yellow-500 hover:bg-yellow-600 px-4 py-4 rounded-md"
-              onClientUploadComplete={(res: { url: string }[]) => {
-                form.setValue("banner", res[0].url);
-              }}
-              onUploadError={(error: Error) => {
-                toast.error(`ERROR! ${error.message}`);
-              }}
-            />
+                <UploadButton
+                  endpoint="imageUploader"
+                  className="w-40 bg-yellow-500 hover:bg-yellow-600 px-4 py-4 rounded-md"
+                  onClientUploadComplete={(res: { url: string }[]) => {
+                    form.setValue("banner", res[0].url);
+                  }}
+                  onUploadError={(error: Error) => {
+                    toast.error(`ERROR! ${error.message}`);
+                  }}
+                />
               )}
             </CardContent>
           </Card>
@@ -363,21 +359,21 @@ const ProductForm = ({
           {/* Description */}
           <FormField
             control={form.control}
-            name='description'
+            name="description"
             render={({
               field,
             }: {
               field: ControllerRenderProps<
                 z.infer<typeof insertProductSchema>,
-                'description'
+                "description"
               >;
             }) => (
-              <FormItem className='w-full'>
+              <FormItem className="w-full">
                 <FormLabel>Description</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder='Enter product description'
-                    className='resize-none'
+                    placeholder="Enter product description"
+                    className="resize-none"
                     {...field}
                   />
                 </FormControl>
