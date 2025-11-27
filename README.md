@@ -1,4 +1,5 @@
 # E-Commerce Website (Next.js) — Project Documentation
+A full featured Ecommerce website built with Next.js, TypeScript, PostgreSQL and Prisma.
 
 ## Overview
 This project is a more modern and scalable evolution of my earlier MERN-based e‑commerce project (**proshop-demo**). Unlike the MERN version—which relies on a traditional separation of backend (Express) and frontend (React)—this implementation takes full advantage of **Next.js**, offering:
@@ -49,7 +50,7 @@ This creates a faster, more maintainable, and more production‑ready foundation
 - Persistent cart state.
 
 ### **5. User Authentication**
-- Secure login and registration.
+- Secure login and registration.(Next Auth)
 - Protected routes.
 
 ### **6. Payments**
@@ -61,7 +62,7 @@ This creates a faster, more maintainable, and more production‑ready foundation
 - Admin page for managing users and products.
 - Product management.
 - Orders overview.
-- Admin-only functionality.
+- Admin area with stats & chart using Recharts
 
 ---
 
