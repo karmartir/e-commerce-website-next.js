@@ -6,7 +6,7 @@ import { Plus, Minus, Loader, X } from "lucide-react";
 import { Cart, CartItem } from "@/types";
 import { toast } from "sonner";
 import { addItemToCart, removeItemFromCart } from "@/lib/actions/cart.actions";
-import { useTransition } from "react";
+import { useState } from "react";
 
 /**
  * A reusable toast function for both success and error messages.
@@ -65,28 +65,31 @@ const showToast = (
 
 const AddToCart = ({ cart, item }: { cart?: Cart; item: CartItem }) => {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const [isAdding, setIsAdding] = useState(false);
+  const [isRemoving, setIsRemoving] = useState(false);
 
   const handleAddCart = async () => {
-    startTransition(async () => {
-      const res = await addItemToCart(item);
-      if (!res.success) {
-        showToast(res.message, { success: false });
-        return;
-      }
-      showToast(res.message, { success: true, viewCart: true, router });
-    });
+    setIsAdding(true);
+    const res = await addItemToCart(item);
+    setIsAdding(false);
+
+    if (!res.success) {
+      showToast(res.message, { success: false });
+      return;
+    }
+    showToast(res.message, { success: true, viewCart: true, router });
   };
 
   const handleRemoveFromCart = async () => {
-    startTransition(async () => {
-      const res = await removeItemFromCart(item.productId);
-      if (!res.success) {
-        showToast(res.message, { success: false });
-        return;
-      }
-      showToast(res.message, { success: true });
-    });
+    setIsRemoving(true);
+    const res = await removeItemFromCart(item.productId);
+    setIsRemoving(false);
+
+    if (!res.success) {
+      showToast(res.message, { success: false });
+      return;
+    }
+    showToast(res.message, { success: true });
   };
 
   const existItem = cart?.items.find((x) => x.productId === item.productId);
@@ -97,9 +100,9 @@ const AddToCart = ({ cart, item }: { cart?: Cart; item: CartItem }) => {
         type="button"
         variant="outline"
         onClick={handleRemoveFromCart}
-        disabled={isPending}
+        disabled={isRemoving}
       >
-        {isPending ? (
+        {isRemoving ? (
           <Loader className="h-4 w-4 animate-spin" />
         ) : (
           <Minus className="h-4 w-4" />
@@ -110,9 +113,9 @@ const AddToCart = ({ cart, item }: { cart?: Cart; item: CartItem }) => {
         type="button"
         variant="outline"
         onClick={handleAddCart}
-        disabled={isPending}
+        disabled={isAdding}
       >
-        {isPending ? (
+        {isAdding ? (
           <Loader className="h-4 w-4 animate-spin" />
         ) : (
           <Plus className="h-4 w-4" />
@@ -124,9 +127,9 @@ const AddToCart = ({ cart, item }: { cart?: Cart; item: CartItem }) => {
       className="w-full"
       type="button"
       onClick={handleAddCart}
-      disabled={isPending}
+      disabled={isAdding}
     >
-      {isPending ? (
+      {isAdding ? (
         <>
           <Loader className="h-4 w-4 animate-spin" />
           Adding...
