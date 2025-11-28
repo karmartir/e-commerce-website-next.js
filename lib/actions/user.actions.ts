@@ -4,6 +4,7 @@ import {
   signInFormSchema,
   signUpFormSchema,
   paymentMethodSchema,
+  updateUserSchema,
 } from "../validators";
 import { auth, signIn, signOut } from "@/auth";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
@@ -173,16 +174,16 @@ export async function getAllUsers({
 // Delete a user
 export async function deleteUser(id: string) {
   const user = await prisma.user.findUnique({
-    where: {id}
+    where: { id },
   });
-  if(!user) throw new Error ("User not found");
+  if (!user) throw new Error("User not found");
   //If the user is an admin, check how many admins exist
-  if(user.role === 'admin'){
+  if (user.role === "admin") {
     const adminCount = await prisma.user.count({
-      where: {role: 'admin'}
-    })
-    if(adminCount <=1){
-      throw new Error("You cannot delete the last remaining admin user!")
+      where: { role: "admin" },
+    });
+    if (adminCount <= 1) {
+      throw new Error("You cannot delete the last remaining admin user!");
     }
   }
   try {
@@ -197,5 +198,25 @@ export async function deleteUser(id: string) {
       success: false,
       message: formatError(error),
     };
+  }
+}
+
+// Update a user
+export async function updateUser(user: z.infer<typeof updateUserSchema>) {
+  try {
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        name: user.name,
+        role: user.role,
+      },
+    });
+    revalidatePath("/admin/users");
+    return {
+      success: true,
+      message: "User updated successfully",
+    };
+  } catch (error) {
+    return { success: false, message: formatError(error) };
   }
 }

@@ -18,6 +18,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { USER_ROLES } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
+import { updateUser } from "@/lib/actions/user.actions";
 
 const UpdateUserForm = ({
   user,
@@ -29,8 +30,23 @@ const UpdateUserForm = ({
     resolver: zodResolver(updateUserSchema),
     defaultValues: user,
   });
-  const onSubmit = () => {
-    return;
+  const onSubmit = async(values: z.infer<typeof updateUserSchema>) => {
+    try {
+        const res = await updateUser({
+          ...values,
+          id: user.id,
+        });
+
+        if (!res.success) {
+           toast.error(res.message);
+           return;
+        }
+        toast.success(res.message);
+        form.reset();
+        router.push('/admin/users');
+    } catch (error) {
+      toast.error((error as Error).message);
+    }
   };
   return (
     <Form {...form}>
