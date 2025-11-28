@@ -17,6 +17,7 @@ This creates a faster, more maintainable, and more production‑ready foundation
 ### Implemented Improvements (confirmed)
 - Removed manual generate button; slug names are generated automatically.
 - Admin now can delete uploaded pictures before submitting if a wrong file was chosen.
+- Admin search input now uses client-side handling with `preventDefault()` to avoid hard reloads, combined with a debounce mechanism to optimize search performance as the admin types.
 
 ### How This Project Improves Over My Earlier Projects
 

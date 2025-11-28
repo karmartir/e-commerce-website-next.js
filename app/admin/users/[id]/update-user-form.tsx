@@ -1,6 +1,6 @@
 "use client";
 
-import { insertProductSchema, updateUserSchema } from "@/lib/validators";
+import { updateUserSchema } from "@/lib/validators";
 import { useRouter } from "next/navigation";
 import { z } from "zod";
 import { toast } from "sonner";
