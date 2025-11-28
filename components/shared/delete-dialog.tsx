@@ -16,15 +16,25 @@ const DeleteDialog = ({
     const [isPending, startTransition] = useTransition();
     const handleDeleteClick = () => {
         startTransition(async () => {
+          try {
             const res = await action(id);
-            if(!res.success){
-                toast.error(res.message)
+      
+            if (!res.success) {
+              toast.error(res.message);
+              setOpen(false);
             } else {
-                setOpen(false);
-                toast.success(res.message)
+              toast.success(res.message);
+              setOpen(false);
             }
-        })
-    }
+          } catch (error: unknown) {
+            if (error instanceof Error) {
+              toast.error(error.message);
+            } else {
+              toast.error("Something went wrong.");
+            }
+          }
+        });
+      };
 
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>

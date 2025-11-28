@@ -1,9 +1,9 @@
 import React from 'react'
 import { Metadata } from 'next'
 import { requireAdmin } from "@/lib/auth-guard";
-import { getAllUsers } from '@/lib/actions/user.actions';
+import { getAllUsers, deleteUser } from '@/lib/actions/user.actions';
 import { Table, TableCell, TableBody, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { formatCurrency, formatDateTime, formatId } from "@/lib/utils";
+import {formatId } from "@/lib/utils";
 import DeleteDialog from "@/components/shared/delete-dialog";
 import { Button } from "@/components/ui/button";
 import Pagination from "@/components/shared/pagination";
@@ -57,7 +57,7 @@ const AdminUserPage = async (props: {
                         Edit
                     </Link>
                     </Button>
-                   {/* <DeleteDialog id={user.id} action={deleteUser}/> */}
+                   <DeleteDialog id={user.id} action={deleteUser}/>
                   </TableCell>
                 </TableRow>
               ))}

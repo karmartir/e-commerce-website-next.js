@@ -18,6 +18,42 @@ This creates a faster, more maintainable, and more production‑ready foundation
 - Removed manual generate button; slug names are generated automatically.
 - Admin now can delete uploaded pictures before submitting if a wrong file was chosen.
 
+### How This Project Improves Over My Earlier Projects
+
+This project is not a simple copy — it is a **significant evolution** of the original tutorial version.  
+Below are the key improvements made:
+
+#### **Stronger Admin Controls**
+- Admin can delete uploaded pictures before saving.
+- Slug generation is automated (no manual slug input).
+- Added protection to prevent deletion of the **last remaining admin**, improving system safety.
+
+**Why:**  
+Prevents data corruption, accidental lock-out, and improves overall UX for store managers.
+
+
+
+#### **Improved Image and File Handling**
+- File management redesigned with safer, more intuitive workflows.
+- Wrong file selections can be removed before submitting.
+
+**Why:**  
+Reduces user mistakes and provides a smoother product‑creation experience.
+
+#### **Database and Backend Stability Upgrades**
+- PostgreSQL + Prisma ORM used with a cleaner schema structure.
+- Validation and safety logic added to sensitive operations (admin deletions, actions).
+
+**Why:**  
+Ensures data reliability, reduces bugs, and produces cleaner database queries.
+
+#### **General Code Quality Improvements**
+- Rewritten many parts of the tutorial logic to be more modern, efficient, and reusable.
+- Eliminated edge-case bugs found in the original implementation.
+
+**Why:**  
+Because the goal is not to copy the tutorial, but to **build a polished, professional version** of it.
+
 ---
 
 ## Screenshots
@@ -51,12 +87,11 @@ This creates a faster, more maintainable, and more production‑ready foundation
 - Persistent cart state.
 
 ### **5. User Authentication**
-- Secure login and registration.(Next Auth)
+- Secure login and registration (NextAuth).
 - Protected routes.
 
 ### **6. Payments**
-- Integrated **PayPal** for online payments.
-- Integrated **Stripe** for online payments.
+- Integrated **PayPal & Stripe** for online payments.
 - Complete checkout flow implemented.
 
 ### **7. Admin Dashboard**
@@ -87,7 +122,7 @@ This creates a faster, more maintainable, and more production‑ready foundation
 ---
 
 ## Credits
-This project was initially inspired by Brad Traversy's Next.js e‑commerce tutorial.  “All further development and enhancements are my own”
+This project was initially inspired by Brad Traversy's Next.js e‑commerce tutorial.  “All further development and enhancements are my own.”
 
 ---
 

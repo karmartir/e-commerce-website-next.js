@@ -11,8 +11,9 @@ import { hashSync } from "bcrypt-ts-edge";
 import { prisma } from "@/db/prisma";
 import { formatError } from "../utils";
 import { ShippingAddress } from "@/types";
-import { z } from "zod";
+import { success, z } from "zod";
 import { PAGE_SIZE } from "../constants";
+import { revalidatePath } from "next/cache";
 
 // Sign in the user with credentials
 export async function signInWithCredentials(
@@ -156,4 +157,33 @@ export async function getAllUsers({
     data,
     totalPages: Math.ceil(dataCount / limit),
   };
+}
+// Delete a user
+export async function deleteUser(id: string) {
+  const user = await prisma.user.findUnique({
+    where: {id}
+  });
+  if(!user) throw new Error ("User not found");
+  //If the user is an admin, check how many admins exist
+  if(user.role === 'admin'){
+    const adminCount = await prisma.user.count({
+      where: {role: 'admin'}
+    })
+    if(adminCount <=1){
+      throw new Error("You cannot delete the last remaining admin user!")
+    }
+  }
+  try {
+    await prisma.user.delete({ where: { id } });
+    revalidatePath("/admin/users");
+    return {
+      success: true,
+      message: "User deleted successfully",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: formatError(error),
+    };
+  }
 }
