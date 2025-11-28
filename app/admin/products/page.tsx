@@ -13,7 +13,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Pagination from "@/components/shared/pagination";
-import DeleteDialog from "@/components/shared/delete-dialog"; 
+import DeleteDialog from "@/components/shared/delete-dialog";
 
 const AdminProductsPage = async (props: {
   searchParams: Promise<{
@@ -36,7 +36,19 @@ const AdminProductsPage = async (props: {
   return (
     <div className="space-y-2">
       <div className="flex-between">
-        <h1 className="h2-bold">Admin Products Dashboard</h1>
+        <div className="flex items-center gap-5">
+          <h1 className="h2-bold">Admin Products Dashboard</h1>
+          {searchText && (
+            <div>
+              Filtered by: <strong>&quot;{searchText}&quot;</strong>
+              <Link href="/admin/products">
+              <Button variant="outline" className="ms-4 sm">
+                Remove Filter
+              </Button>
+              </Link>
+            </div>
+          )}
+        </div>
         <Button asChild variant="default">
           <Link href="/admin/products/create">Create Product</Link>
         </Button>
@@ -54,7 +66,7 @@ const AdminProductsPage = async (props: {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {products.data.map((product) =>(
+          {products.data.map((product) => (
             <TableRow key={product.id}>
               <TableCell>{formatId(product.id)}</TableCell>
               <TableCell>{product.name}</TableCell>
@@ -65,18 +77,18 @@ const AdminProductsPage = async (props: {
               <TableCell className="flex gap-1">
                 <Button asChild variant='outline' size='sm'>
                   <Link href={`/admin/products/${product.id}`}>
-                  Edit
+                    Edit
                   </Link>
                 </Button>
-                <DeleteDialog id={product.id} action={deleteProduct}/>
+                <DeleteDialog id={product.id} action={deleteProduct} />
               </TableCell>
 
             </TableRow>
-          ) )}
+          ))}
         </TableBody>
       </Table>
       {products.totalPages > 1 && (
-        <Pagination page={page} totalPages={products.totalPages}/>
+        <Pagination page={page} totalPages={products.totalPages} />
       )}
     </div>
   );
