@@ -72,9 +72,21 @@ export async function signUpUser(
   }
 }
 
-// Get user by the id
+// Get user by the id (safe, excludes password)
 export async function getUserById(userId: string) {
-  const user = await prisma.user.findFirst({ where: { id: userId } });
+  const user = await prisma.user.findFirst({
+    where: { id: userId },
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      address: true,
+      paymentMethod: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+  });
   if (!user) throw new Error("User not found");
   return user;
 }
