@@ -18,6 +18,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
+import IncrementButton from "./increment-button";
+import DecrementButton from "./decrement-button";
 
 const CartTable = ({ cart }: { cart?: Cart }) => {
   const router = useRouter();
@@ -60,51 +62,9 @@ const CartTable = ({ cart }: { cart?: Cart }) => {
                     </TableCell>
 
                     <TableCell className="flex-center gap-3 mt-2 justify-center">
-                      <Button
-                        size="icon"
-                        disabled={isPending}
-                        variant="outline"
-                        type="button"
-                        onClick={() =>
-                          startTransition(async () => {
-                            const res = await removeItemFromCart(
-                              item.productId
-                            );
-                            if (!res.success) {
-                              toast.error(res.message);
-                            }
-                            router.refresh();
-                          })
-                        }
-                      >
-                        {isPending ? (
-                          <Loader className="animate-spin" size={14} />
-                        ) : (
-                          <Minus size={14} />
-                        )}
-                      </Button>
+                    <DecrementButton item={item} />
                       <span>{item.qty}</span>
-                      <Button
-                        size="icon"
-                        disabled={isPending}
-                        variant="outline"
-                        type="button"
-                        onClick={() =>
-                          startTransition(async () => {
-                            const res = await addItemToCart(item);
-                            if (!res.success) {
-                              toast.error(res.message);
-                            }
-                            router.refresh();
-                          })
-                        }
-                      >
-                        {isPending ? (
-                          <Loader className="animate-spin" size={14} />
-                        ) : (
-                          <Plus size={14} />
-                        )}
-                      </Button>
+                      <IncrementButton item={item} />
                     </TableCell>
                     <TableCell className="text-right">${item.price}</TableCell>
                   </TableRow>
