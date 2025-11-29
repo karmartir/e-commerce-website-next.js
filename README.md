@@ -123,7 +123,12 @@ Because the goal is not to copy the tutorial, but to **build a polished, profess
 ---
 
 ## Credits
-This project was initially inspired by Brad Traversy's Next.js e‑commerce tutorial.  “All further development and enhancements are my own.”
+This project includes specific improvements over the previous version, such as:
+- Improved image and file handling for admins.
+- Automated slug generation for products.
+- Enhanced database and backend stability using PostgreSQL + Prisma.
+- General code quality improvements for modern, reusable, and maintainable code.
+- Minor accessibility improvements in drawer components (added `<DrawerDescription>` for screen readers).
 
 ---
 
