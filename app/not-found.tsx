@@ -13,7 +13,7 @@ const NotFoundPage = () => {
         alt={`${APP_NAME} logo`}
         priority
       />
-      <div className="p-6 rounded-lg w-1/3 shadow-md text-center">
+      <div className="p-6 rounded-lg w-full max-w-sm shadow-md text-center">
         <h6 className="text-3xl font-bold mb-4">Not Found</h6>
         <p className="text-destructive">Could not find requested page</p>
         <Button asChild variant="outline" className="mt-4">
