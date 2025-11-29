@@ -3,7 +3,7 @@ import Link from "next/link";
 import { APP_NAME } from "@/lib/constants";
 import Menu from "./menu";
 import CategoryDrawer from './category-drawer';
-import Search from "./search";
+import SearchWrapper from "./search-wrapper";
 
 const Header = () => {
   return (
@@ -25,7 +25,7 @@ const Header = () => {
           </Link>
         </div>
         <div className='hidden md:block'>
-        <Search />
+        <SearchWrapper />
         </div>
         <Menu />
       </div>

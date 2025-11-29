@@ -1,18 +1,18 @@
 'use client';
 
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { SearchIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
 
 interface Category {
   category: string;
 }
 
 interface SearchProps {
-  categories: Category[];
+  categories?: Category[];
 }
 
 const Search = ({ categories = [] }: SearchProps) => {
@@ -22,7 +22,7 @@ const Search = ({ categories = [] }: SearchProps) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    router.push(`/search?q=${encodeURIComponent(q)}&category=${encodeURIComponent(category)}`);
+    router.push(`/search?category=${encodeURIComponent(category)}&q=${encodeURIComponent(q)}`);
   };
 
   return (
@@ -33,13 +33,14 @@ const Search = ({ categories = [] }: SearchProps) => {
         </SelectTrigger>
         <SelectContent>
           <SelectItem key="all" value="all">All Categories</SelectItem>
-          {categories.map((x) => (
+          {categories?.map((x) => (
             <SelectItem key={x.category} value={x.category}>
               {x.category}
             </SelectItem>
           ))}
         </SelectContent>
       </Select>
+
       <Input
         value={q}
         onChange={(e) => setQ(e.target.value)}
