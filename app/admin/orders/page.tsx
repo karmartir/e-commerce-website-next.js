@@ -16,86 +16,86 @@ const AdminOrdersPage = async (props: {
   searchParams: Promise<{ page: string; query: string }>;
 }) => {
   await requireAdmin();
-  const { page = "1", query:searchText } = await props.searchParams;
+  const { page = "1", query: searchText } = await props.searchParams;
   const orders = await getAllOrders({ page: Number(page), query: searchText || '' });
 
   return (
     <div className="space-y-2">
-    <h1 className="h2-bold">Admin Orders Dashboard</h1>
-    <div className="flex items-center gap-5">
-     {searchText && (
-            <div>
-              Filtered by: <strong>&quot;{searchText}&quot;</strong>
-              <Link href="/admin/orders">
+      <div className="flex items-center gap-5">
+        <h1 className="h2-bold">Admin Orders Dashboard</h1>
+        {searchText && (
+          <div>
+            Filtered by: <strong>&quot;{searchText}&quot;</strong>
+            <Link href="/admin/orders">
               <Button variant="outline" className="ms-4 sm">
                 Remove Filter
               </Button>
-              </Link>
-            </div>
-          )}
+            </Link>
           </div>
-    <div className="overflow-x-auto">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>ID</TableHead>
-            <TableHead>DATE</TableHead>
-             <TableHead>BUYER</TableHead>
-            <TableHead>TOTAL</TableHead>
-            <TableHead>PAID</TableHead>
-            <TableHead>DELIVERED</TableHead>
-            <TableHead>ACTIONS</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {orders.data.map((order) => (
-            <TableRow key={order.id}>
-              <TableCell>{formatId(order.id)}</TableCell>
-              <TableCell>
-                {formatDateTime(order.createdAt).dateTime}
-              </TableCell>
-               <TableCell>
-                {order.user.name}
-              </TableCell>
-              <TableCell>{formatCurrency(order.totalPrice)}</TableCell>
-              <TableCell>
-                {order.isPaid && order.paidAt ? (
-                  <span className="text-muted-foreground">
-                    {formatDateTime(order.paidAt).dateTime}
-                  </span>
-                ) : (
-                  <span className="text-red-800">Not Paid!</span>
-                )}
-              </TableCell>
-              <TableCell>
-                {order.isDelivered && order.deliveredAt ? (
-                  <span className="text-muted-foreground">
-                    {formatDateTime(order.deliveredAt).dateTime}
-                  </span>
-                ) : (
-                  <span className="">Not Delivered!</span>
-                )}
-              </TableCell>
-              <TableCell>
-                <Button asChild variant='outline' size='sm'>
-                <Link href={`/order/${order.id}`}>
-                    Details
-                </Link>
-                </Button>
-               <DeleteDialog id={order.id} action={deleteOrder}/>
-              </TableCell>
+        )}
+      </div>
+      <div className="overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>ID</TableHead>
+              <TableHead>DATE</TableHead>
+              <TableHead>BUYER</TableHead>
+              <TableHead>TOTAL</TableHead>
+              <TableHead>PAID</TableHead>
+              <TableHead>DELIVERED</TableHead>
+              <TableHead>ACTIONS</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      {orders.totalPages > 1 && (
-        <Pagination
-          page={Number(page) || 1}
-          totalPages={orders?.totalPages}
-        />
-      )}
+          </TableHeader>
+          <TableBody>
+            {orders.data.map((order) => (
+              <TableRow key={order.id}>
+                <TableCell>{formatId(order.id)}</TableCell>
+                <TableCell>
+                  {formatDateTime(order.createdAt).dateTime}
+                </TableCell>
+                <TableCell>
+                  {order.user.name}
+                </TableCell>
+                <TableCell>{formatCurrency(order.totalPrice)}</TableCell>
+                <TableCell>
+                  {order.isPaid && order.paidAt ? (
+                    <span className="text-muted-foreground">
+                      {formatDateTime(order.paidAt).dateTime}
+                    </span>
+                  ) : (
+                    <span className="text-red-800">Not Paid!</span>
+                  )}
+                </TableCell>
+                <TableCell>
+                  {order.isDelivered && order.deliveredAt ? (
+                    <span className="text-muted-foreground">
+                      {formatDateTime(order.deliveredAt).dateTime}
+                    </span>
+                  ) : (
+                    <span className="">Not Delivered!</span>
+                  )}
+                </TableCell>
+                <TableCell>
+                  <Button asChild variant='outline' size='sm'>
+                    <Link href={`/order/${order.id}`}>
+                      Details
+                    </Link>
+                  </Button>
+                  <DeleteDialog id={order.id} action={deleteOrder} />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        {orders.totalPages > 1 && (
+          <Pagination
+            page={Number(page) || 1}
+            totalPages={orders?.totalPages}
+          />
+        )}
+      </div>
     </div>
-  </div>
   );
 };
 export default AdminOrdersPage;
