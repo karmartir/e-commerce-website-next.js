@@ -1,10 +1,8 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 import { useTransition } from "react";
-import { addItemToCart, removeItemFromCart } from "@/lib/actions/cart.actions";
 import { Cart } from "@/types";
-import { ArrowRight, Loader, Minus, Plus } from "lucide-react";
+import { ArrowRight, Loader} from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import {
