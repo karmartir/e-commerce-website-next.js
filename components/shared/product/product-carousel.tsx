@@ -5,34 +5,30 @@ import Autoplay from "embla-carousel-autoplay";
 import { Product } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
+import { useRef } from "react";
 
-const ProductCarousel = ({ data }: {
-    data: Product[]
-}) => {
+const ProductCarousel = ({ data }: { data: Product[] }) => {
+    // create the plugin instance
+    const autoplay = useRef(Autoplay({ delay: 5000, stopOnInteraction: false, stopOnMouseEnter: false }));
+
     return (
-        <Carousel className="w-full mb-12" opts={{
-            loop: true
-        }} plugins={[Autoplay(
-            { delay: 8000, stopOnInteraction: true, stopOnMouseEnter: true }
-        )]}>
+        <Carousel className="w-full mb-12" opts={{ loop: true }} plugins={[autoplay.current]}>
             <CarouselContent>
                 {data.map((product: Product) => (
                     <CarouselItem key={product.id} className="p-4">
                         <Link href={`/product/${product.slug}`} className="block border rounded-lg p-4 hover:shadow-lg transition-shadow">
                             <div className="relative mx-auto">
-                                <Image src={product.banner!} alt={product.name} width="0" height="0" sizes="100vw" className="w-full h-auto" />
+                                <Image priority src={product.banner!} alt={product.name} width={0} height={0} sizes="100vw" className="w-full h-auto" />
                                 <div className="absolute inset-0 flex items-end justify-center">
                                     <h2 className="bg-gray-900 bg-opacity-50 text-2xl font-bold px-2 text-white">{product.name}</h2>
                                 </div>
                             </div>
                         </Link>
-
                     </CarouselItem>
                 ))}
             </CarouselContent>
             <CarouselPrevious />
             <CarouselNext />
-
         </Carousel>
     );
 }
