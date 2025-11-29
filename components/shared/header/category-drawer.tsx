@@ -19,26 +19,27 @@ const CategoryDrawer = async () => {
           <DrawerTitle className='ms-4 mt-4'>
             SELECT A CATEGORY
           </DrawerTitle>
-          <DrawerDescription className="ms-4 text-sm text-muted-foreground">
+          <DrawerDescription className="ms-4 mb-4 text-sm text-muted-foreground">
             Browse and select a category to filter products.
           </DrawerDescription>
-          <ul className="list-disc ms-8 my-4 space-y-2">
-            {categories.map((category) => (
-              <li key={category.category} className="py-1">
-                <DrawerClose asChild>
-                  <Link href={`/search?category=${category.category}`}>
-                    {category.category} ({category._count})
-                  </Link>
-                </DrawerClose>
-              </li>
-            ))}
-          </ul>
+          <hr className="border-t border-gray-300 dark:border-gray-700 my-2" />
+          {categories.map((category) => (
+            <DrawerClose key={category.category} asChild>
+              <div className="mt-2 ms-4">
+              <Link
+                href={`/search?category=${category.category}`}
+                className="block w-full px-2 py-1 rounded-md hover:bg-gray-200 dark:hover:bg-accent-foreground/20 dark:hover:text-accent-foreground transition-colors duration-200"
+              >
+                {category.category} ({category._count})
+              </Link>
+                </div>
+            </DrawerClose>
+          ))}
         </DrawerHeader>
       </DrawerContent>
     </Drawer>
 
   );
-
 }
 
 export default CategoryDrawer;
