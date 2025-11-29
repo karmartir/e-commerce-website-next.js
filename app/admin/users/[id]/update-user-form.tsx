@@ -113,7 +113,7 @@ const UpdateUserForm = ({
             }) => (
               <FormItem className="w-full">
                 <FormLabel>Role</FormLabel>
-                <Select onValueChange={field.onChange} value={field.value.toString()}>
+                <Select onValueChange={field.onChange} value={field?.value?.toString()}>
                 <FormControl>
                 <SelectTrigger className="w-full">
                 <SelectValue placeholder='Select a role'/>
