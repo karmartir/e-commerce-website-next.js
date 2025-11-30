@@ -30,6 +30,8 @@ const prices = [
 
 const ratings = [4, 3, 2, 1];
 
+const sortOrders = ['newest', 'lowest', 'highest', 'rating'];
+
 const SearchPage = async (props: {
     searchParams: Promise<{
         q?: string;
@@ -212,6 +214,18 @@ const SearchPage = async (props: {
                     <div>
                         {products.data.length} Result{products.data.length !== 1 && 's'}
                         {/* {sort} */}
+                    </div>
+                    <div>
+                        Sort by {' '}
+                        {sortOrders.map((s, index) => (
+                            <React.Fragment key={s}>
+                                <Link className={`${sort == s && 'font-bold'}`}
+                                    href={getFilterUrl({ s })}>
+                                    {s}
+                                </Link>
+                                {index !== sortOrders.length - 1 && <span className="px-2">|</span>}
+                            </React.Fragment>
+                        ))} 
                     </div>
                 </div>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
