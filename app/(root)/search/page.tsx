@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { getAllProducts, getAllCategories } from "@/lib/actions/product.actions";
 import Link from "next/link";
 import React from "react";
+import { cn } from "@/lib/utils";
+import { Sheet, SheetTrigger, SheetContent, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 
 
 const prices = [
@@ -148,29 +150,205 @@ const SearchPage = async (props: {
         page: Number(page)
     });
     const categories = await getAllCategories();
+
+    {/* Mobile Filter Button */}
     return (
-        <div className="grid md:grid-cols-5 md:gap-5">
-            <div className="filter-links">
-                {/* {Category Links} */}
+      <>
+        <div className="md:hidden mb-4">
+          <Sheet>
+            <SheetTrigger asChild>
+              <Button variant="outline" className="w-full">Filters</Button>
+            </SheetTrigger>
+
+            <SheetContent side="left" className="w-72 p-4 overflow-y-auto">
+              <SheetHeader>
+                <SheetTitle>Filters</SheetTitle>
+                <SheetDescription>Adjust your product filters</SheetDescription>
+              </SheetHeader>
+              {/* MOBILE FILTER SIDEBAR CONTENT — duplicated from desktop */}
+              <div className="filter-links">
+                {
+                  (q !== 'all' && q !== '') ||
+                    (category !== 'all' && category !== '') ||
+                    (rating !== 'all') ||
+                    (price !== 'all') ? (
+                    <Button className="w-full mt-4" variant="outline" size={"sm"} asChild >
+                      <Link href="/search">Clear all filters</Link>
+                    </Button>
+                  ) : null}
+
+                {/* Category */}
                 <div className="text-xl mb-2 mt-3">Department</div>
+                <ul className="space-y-1">
+                  <li>
+                    <Link
+                      className={cn(
+                        "block px-2 py-1 rounded-sm transition-colors",
+                        (category === 'all' || category === '')
+                          ? "font-bold text-gray-900 dark:text-gray-100"
+                          : "text-gray-600 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                      )}
+                      href={getFilterUrl({ c: 'all' })}
+                    >
+                      Any
+                    </Link>
+                  </li>
+                  <hr className="border-t border-gray-300/80 dark:border-gray-700/60 my-1" />
+                  {categories.map((cat, index) => (
+                    <React.Fragment key={cat.category}>
+                      <li>
+                        <Link
+                          className={cn(
+                            "block px-2 py-1 rounded-sm transition-colors",
+                            category === cat.category
+                              ? "font-bold text-gray-900 dark:text-gray-100"
+                              : "text-gray-600 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                          )}
+                          href={getFilterUrl({ c: cat.category })}
+                        >
+                          {cat.category}
+                        </Link>
+                      </li>
+                      {index !== categories.length - 1 && <hr className="border-t border-gray-300/80 dark:border-gray-700/60 my-1" />}
+                    </React.Fragment>
+                  ))}
+                </ul>
+
+                {/* Price */}
+                <div className="text-xl mb-2 mt-8">Price</div>
+                <ul className="space-y-1">
+                  <li>
+                    <Link
+                      className={cn(
+                        "block px-2 py-1 rounded-sm transition-colors",
+                        price === 'all'
+                          ? "font-bold text-gray-900 dark:text-gray-100"
+                          : "text-gray-600 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                      )}
+                      href={getFilterUrl({ p: 'all' })}
+                    >
+                      Any
+                    </Link>
+                  </li>
+                  <hr className="border-t border-gray-300/80 dark:border-gray-700/60 my-1" />
+                  {prices.map((priceOption, index) => (
+                    <React.Fragment key={priceOption.value}>
+                      <li>
+                        <Link
+                          className={cn(
+                            "block px-2 py-1 rounded-sm transition-colors",
+                            price === priceOption.value
+                              ? "font-bold text-gray-900 dark:text-gray-100"
+                              : "text-gray-600 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                          )}
+                          href={getFilterUrl({ p: priceOption.value })}
+                        >
+                          {priceOption.name}
+                        </Link>
+                      </li>
+                      {index !== prices.length - 1 && <hr className="border-t border-gray-300/80 dark:border-gray-700/60 my-1" />}
+                    </React.Fragment>
+                  ))}
+                </ul>
+
+                {/* Rating */}
+                <div className="text-xl mb-2 mt-8">Customer Ratings</div>
+                <ul className="space-y-1">
+                  <li>
+                    <Link
+                      className={cn(
+                        "block px-2 py-1 rounded-sm transition-colors",
+                        rating === 'all'
+                          ? "font-bold text-gray-900 dark:text-gray-100"
+                          : "text-gray-600 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                      )}
+                      href={getFilterUrl({ r: 'all' })}
+                    >
+                      Any
+                    </Link>
+                  </li>
+                  <hr className="border-t border-gray-300/80 dark:border-gray-700/60 my-1" />
+                  {ratings.map((r, index) => (
+                    <React.Fragment key={r}>
+                      <li>
+                        <Link
+                          className={cn(
+                            "block px-2 py-1 rounded-sm transition-colors",
+                            rating === r.toString()
+                              ? "font-bold text-gray-900 dark:text-gray-100"
+                              : "text-gray-600 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                          )}
+                          href={getFilterUrl({ r: `${r}` })}
+                        >
+                          {`${r} star${r === 1 ? '' : 's'} & up`}
+                        </Link>
+                      </li>
+                      {index !== ratings.length - 1 && <hr className="border-t border-gray-300/80 dark:border-gray-700/60 my-1" />}
+                    </React.Fragment>
+                  ))}
+                </ul>
+              </div>
+            </SheetContent>
+          </Sheet>
+        </div>
+
+        <div className="grid md:grid-cols-5 md:gap-5">
+            <div className="filter-links hidden md:block">
+                {
+                    (q !== 'all' && q !== '') ||
+                        (category !== 'all' && category !== '') ||
+                        (rating !== 'all') ||
+                        (price !== 'all') ? (
+                        <Button className="w-full mt-4" variant="outline" size={"sm"} asChild >
+                            <Link href="/search">Clear all filters</Link>
+                        </Button>
+                    ) : null}
+                {/* {Category Links} */}
+                <div
+                    className={cn(
+                        "text-xl mb-2", "mt-3",
+                        (q !== 'all' && q !== '') ||
+                            (category !== 'all' && category !== '') ||
+                            (rating !== 'all') ||
+                            (price !== 'all')
+                            ? "md:mt-3"
+                            : "md:mt-[60px]"
+                    )}
+                >
+                    Department
+                </div>
                 <div>
                     <ul className="space-y-1">
                         <li>
-                            <Link className={`${(category === 'all' || category === '') && 'font-bold'}`}
-                                href={getFilterUrl({ c: 'all' })}>
+                            <Link
+                                className={cn(
+                                    "block px-2 py-1 rounded-sm transition-colors",
+                                    (category === 'all' || category === '')
+                                        ? "font-bold text-gray-900 dark:text-gray-100"
+                                        : "text-gray-600 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                                )}
+                                href={getFilterUrl({ c: 'all' })}
+                            >
                                 Any
                             </Link>
                         </li>
-                        <hr className="border-t border-gray-300 my-1" />
+                        <hr className="border-t border-gray-300/80 dark:border-gray-700/60 my-1" />
                         {categories.map((cat, index) => (
                             <React.Fragment key={cat.category}>
                                 <li>
-                                    <Link className={`${category === cat.category && 'font-bold'}`}
-                                        href={getFilterUrl({ c: cat.category })}>
+                                    <Link
+                                        className={cn(
+                                            "block px-2 py-1 rounded-sm transition-colors",
+                                            category === cat.category
+                                                ? "font-bold text-gray-900 dark:text-gray-100"
+                                                : "text-gray-600 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                                        )}
+                                        href={getFilterUrl({ c: cat.category })}
+                                    >
                                         {cat.category}
                                     </Link>
                                 </li>
-                                {index !== categories.length - 1 && <hr className="border-t border-gray-300 my-1" />}
+                                {index !== categories.length - 1 && <hr className="border-t border-gray-300/80 dark:border-gray-700/60 my-1" />}
                             </React.Fragment>
                         ))}
                     </ul>
@@ -180,21 +358,35 @@ const SearchPage = async (props: {
                 <div>
                     <ul className="space-y-1">
                         <li>
-                            <Link className={`${price === 'all' && 'font-bold'}`}
-                                href={getFilterUrl({ p: 'all' })}>
+                            <Link
+                                className={cn(
+                                    "block px-2 py-1 rounded-sm transition-colors",
+                                    price === 'all'
+                                        ? "font-bold text-gray-900 dark:text-gray-100"
+                                        : "text-gray-600 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                                )}
+                                href={getFilterUrl({ p: 'all' })}
+                            >
                                 Any
                             </Link>
                         </li>
-                        <hr className="border-t border-gray-300 my-1" />
+                        <hr className="border-t border-gray-300/80 dark:border-gray-700/60 my-1" />
                         {prices.map((priceOption, index) => (
                             <React.Fragment key={priceOption.value}>
                                 <li>
-                                    <Link className={`${price === priceOption.value && 'font-bold'}`}
-                                        href={getFilterUrl({ p: priceOption.value })}>
+                                    <Link
+                                        className={cn(
+                                            "block px-2 py-1 rounded-sm transition-colors",
+                                            price === priceOption.value
+                                                ? "font-bold text-gray-900 dark:text-gray-100"
+                                                : "text-gray-600 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                                        )}
+                                        href={getFilterUrl({ p: priceOption.value })}
+                                    >
                                         {priceOption.name}
                                     </Link>
                                 </li>
-                                {index !== prices.length - 1 && <hr className="border-t border-gray-300 my-1" />}
+                                {index !== prices.length - 1 && <hr className="border-t border-gray-300/80 dark:border-gray-700/60 my-1" />}
                             </React.Fragment>
                         ))}
                     </ul>
@@ -204,21 +396,35 @@ const SearchPage = async (props: {
                 <div>
                     <ul className="space-y-1">
                         <li>
-                            <Link className={`${rating === 'all' && 'font-bold'}`}
-                                href={getFilterUrl({ r: 'all' })}>
+                            <Link
+                                className={cn(
+                                    "block px-2 py-1 rounded-sm transition-colors",
+                                    rating === 'all'
+                                        ? "font-bold text-gray-900 dark:text-gray-100"
+                                        : "text-gray-600 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                                )}
+                                href={getFilterUrl({ r: 'all' })}
+                            >
                                 Any
                             </Link>
                         </li>
-                        <hr className="border-t border-gray-300 my-1" />
+                        <hr className="border-t border-gray-300/80 dark:border-gray-700/60 my-1" />
                         {ratings.map((r, index) => (
                             <React.Fragment key={r}>
                                 <li>
-                                    <Link className={`${rating === r.toString() && 'font-bold'}`}
-                                        href={getFilterUrl({ r: `${r}` })}>
+                                    <Link
+                                        className={cn(
+                                            "block px-2 py-1 rounded-sm transition-colors",
+                                            rating === r.toString()
+                                                ? "font-bold text-gray-900 dark:text-gray-100"
+                                                : "text-gray-600 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                                        )}
+                                        href={getFilterUrl({ r: `${r}` })}
+                                    >
                                         {`${r} star${r === 1 ? '' : 's'} & up`}
                                     </Link>
                                 </li>
-                                {index !== ratings.length - 1 && <hr className="border-t border-gray-300 my-1" />}
+                                {index !== ratings.length - 1 && <hr className="border-t border-gray-300/80 dark:border-gray-700/60 my-1" />}
                             </React.Fragment>
                         ))}
                     </ul>
@@ -233,22 +439,22 @@ const SearchPage = async (props: {
                         {price !== 'all' && price !== '' && ' Price: ' + price + '.'}
                         {rating !== 'all' && rating !== '' && ' Rating: ' + rating + ` star${rating === '1' ? '' : 's'} & up.`}
                         &nbsp;
-                        {
+                        {/* {
                             (q !== 'all' && q !== '') ||
                                 (category !== 'all' && category !== '') ||
                                 (rating !== 'all') ||
                                 (price !== 'all') ? (
-                                <Button variant={"link"} asChild >
-                                    <Link href="/search"> Clear</Link>
+                                <Button variant={"link"} size={"sm"} asChild >
+                                    <Link href="/search">Clear</Link>
                                 </Button>
-                            ) : null}
+                            ) : null} */}
                     </div>
 
                     <div>
                         {products.data.length} Result{products.data.length !== 1 && 's'}
                         {/* {sort} */}
                     </div>
-                    <div>
+                    <div className="ms-0.5">
                         Sort by {' '}
                         {sortOrders.map((s, index) => (
                             <React.Fragment key={s}>
@@ -261,7 +467,7 @@ const SearchPage = async (props: {
                         ))}
                     </div>
                 </div>
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-3 justify-items-center">
                     {products.data.length === 0 && (
                         <div>No products found</div>
                     )}
@@ -271,6 +477,7 @@ const SearchPage = async (props: {
                 </div>
             </div>
         </div>
+      </>
     )
 
 }
