@@ -14,5 +14,6 @@
   "less.validate": false,
   "cSpell.words": [
     "Uploadthing"
-  ]
+  ],
+  "prisma.pinToPrisma6": true
 }

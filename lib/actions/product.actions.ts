@@ -1,4 +1,3 @@
-
 'use server';
 import { prisma } from '@/db/prisma';
 import { convertToPlainObject, formatError } from '../utils';
@@ -52,48 +51,38 @@ export async function getAllProducts({
   rating?: string;
   sort?: string;
 }) {
-  // Query filter
-  const queryFilter: Prisma.ProductWhereInput =
-    query && query !== 'all'
-      ? {
-          name: {
-            contains: query,
-            mode: 'insensitive',
-          } as Prisma.StringFilter,
-        }
-      : {};
+  // Build dynamic 'where' object
+  const where: Prisma.ProductWhereInput = {};
 
-  // Category filter
-  const categoryFilter = category && category !== 'all' ? { category } : {};
+  // Apply query filter
+  if (query && query !== 'all') {
+    where.name = { contains: query, mode: 'insensitive' };
+  }
 
-  // Price filter
-  const priceFilter: Prisma.ProductWhereInput =
-    price && price !== 'all'
-      ? {
-          price: {
-            gte: Number(price.split('-')[0]),
-            lte: Number(price.split('-')[1]),
-          },
-        }
-      : {};
+  // Apply category filter
+  if (category && category !== 'all') {
+    where.category = category;
+  }
 
-  // Rating filter
-  const ratingFilter =
-    rating && rating !== 'all'
-      ? {
-          rating: {
-            gte: Number(rating),
-          },
-        }
-      : {};
+  // Apply price filter
+  if (price && price !== 'all') {
+    const [min, max] = price.split('-').map(Number);
+    where.price = { gte: min, lte: max };
+  }
+
+  // Apply rating filter
+  if (rating && rating !== 'all') {
+    where.rating = { gte: Number(rating) };
+  }
+
+  // Only hide out-of-stock products if any filter/search applied
+  //You can remove this if you want to show out-of-stock products
+  if (Object.keys(where).length > 0) {
+    where.stock = { gt: 0 };
+  }
 
   const data = await prisma.product.findMany({
-    where: {
-      ...queryFilter,
-      ...categoryFilter,
-      ...priceFilter,
-      ...ratingFilter,
-    },
+    where,
     orderBy:
       sort === 'lowest'
         ? { price: 'asc' }
@@ -106,7 +95,7 @@ export async function getAllProducts({
     take: limit,
   });
 
-  const dataCount = await prisma.product.count();
+  const dataCount = await prisma.product.count({ where });
 
   return {
     data,
