@@ -1,6 +1,8 @@
 import ProductCard from "@/components/shared/product/product-card";
+import { Button } from "@/components/ui/button";
 import { getAllProducts, getAllCategories } from "@/lib/actions/product.actions";
 import Link from "next/link";
+import React from "react";
 
 
 const prices = [
@@ -26,6 +28,8 @@ const prices = [
     }
 ]
 
+const ratings = [4, 3, 2, 1];
+
 const SearchPage = async (props: {
     searchParams: Promise<{
         q?: string;
@@ -37,7 +41,7 @@ const SearchPage = async (props: {
     }>
 }) => {
     const { q = 'all', category = 'all', price = 'all', rating = 'all', sort = 'newest', page = '1' } = await props.searchParams;
-    
+
     // Construct the filter url
 
     /* const getFilterUrl = ({
@@ -64,41 +68,41 @@ const SearchPage = async (props: {
         return `/search?` + new URLSearchParams(params).toString();
 
     } */
-const getFilterUrl = ({
-    c,
-    p,
-    s,
-    r,
-    pg
-}: {
-    c?: string;
-    p?: string;
-    s?: string;
-    r?: string;
-    pg?: string;
-}) => {
-    const params = {
-        q,
-        category,
-        price,
-        rating,
-        sort,
-        page
+    const getFilterUrl = ({
+        c,
+        p,
+        s,
+        r,
+        pg
+    }: {
+        c?: string;
+        p?: string;
+        s?: string;
+        r?: string;
+        pg?: string;
+    }) => {
+        const params = {
+            q,
+            category,
+            price,
+            rating,
+            sort,
+            page
+        };
+
+        if (c) params.category = c;
+        if (p) params.price = p;
+        if (s) params.sort = s;
+        if (r) params.rating = r;
+        if (pg) params.page = pg;
+
+        // manually encode each param so spaces become %20
+        const queryString = Object.entries(params)
+            .map(([key, value]) => `${key}=${encodeURIComponent(value as string)}`)
+            .join('&');
+
+        return `/search?` + queryString;
     };
-
-    if (c) params.category = c;
-    if (p) params.price = p;
-    if (s) params.sort = s;
-    if (r) params.rating = r;
-    if (pg) params.page = pg;
-
-    // manually encode each param so spaces become %20
-    const queryString = Object.entries(params)
-        .map(([key, value]) => `${key}=${encodeURIComponent(value as string)}`)
-        .join('&');
-
-    return `/search?` + queryString;
-};
 
     const products = await getAllProducts({
         query: q,
@@ -113,49 +117,103 @@ const getFilterUrl = ({
         <div className="grid md:grid-cols-5 md:gap-5">
             <div className="filter-links">
                 {/* {Category Links} */}
-               <div className="text-xl mb-2 mt-3">Department</div>
-               <div>
-                <ul className="space-y-1">
-                    <li>
-                       <Link className={`${(category === 'all' || category === '') && 'font-bold'}`}
-                        href={getFilterUrl({ c: 'all' })}>
-                            Any
-                       </Link> 
-                    </li>
-                    {categories.map((cat) => (
-                        <li key={cat.category}>
-                           <Link className={`${category === cat.category && 'font-bold'}`}
-                            href={getFilterUrl({ c: cat.category })}>
-                                {cat.category}
-                           </Link> 
+                <div className="text-xl mb-2 mt-3">Department</div>
+                <div>
+                    <ul className="space-y-1">
+                        <li>
+                            <Link className={`${(category === 'all' || category === '') && 'font-bold'}`}
+                                href={getFilterUrl({ c: 'all' })}>
+                                Any
+                            </Link>
                         </li>
-                    ))}
-                </ul>
-               </div>
-               {/* {Price Links} */}
-               <div className="text-xl mb-2 mt-8">Price</div>
-               <div>
-                <ul className="space-y-1">
-                    <li>
-                       <Link className={`${price === 'all' && 'font-bold'}`}
-                        href={getFilterUrl({ p: 'all' })}>
-                            Any
-                       </Link> 
-                    </li>
-                    {prices.map((priceOption) => (
-                        <li key={priceOption.value}>
-                           <Link className={`${price === priceOption.value && 'font-bold'}`}
-                            href={getFilterUrl({ p: priceOption.value })}>
-                                {priceOption.name}
-                           </Link> 
+                        <hr className="border-t border-gray-300 my-1" />
+                        {categories.map((cat, index) => (
+                            <React.Fragment key={cat.category}>
+                                <li>
+                                    <Link className={`${category === cat.category && 'font-bold'}`}
+                                        href={getFilterUrl({ c: cat.category })}>
+                                        {cat.category}
+                                    </Link>
+                                </li>
+                                {index !== categories.length - 1 && <hr className="border-t border-gray-300 my-1" />}
+                            </React.Fragment>
+                        ))}
+                    </ul>
+                </div>
+                {/* {Price Links} */}
+                <div className="text-xl mb-2 mt-8">Price</div>
+                <div>
+                    <ul className="space-y-1">
+                        <li>
+                            <Link className={`${price === 'all' && 'font-bold'}`}
+                                href={getFilterUrl({ p: 'all' })}>
+                                Any
+                            </Link>
                         </li>
-                    ))}
-                </ul>
-               </div>
+                        <hr className="border-t border-gray-300 my-1" />
+                        {prices.map((priceOption, index) => (
+                            <React.Fragment key={priceOption.value}>
+                                <li>
+                                    <Link className={`${price === priceOption.value && 'font-bold'}`}
+                                        href={getFilterUrl({ p: priceOption.value })}>
+                                        {priceOption.name}
+                                    </Link>
+                                </li>
+                                {index !== prices.length - 1 && <hr className="border-t border-gray-300 my-1" />}
+                            </React.Fragment>
+                        ))}
+                    </ul>
+                </div>
+                {/* {Rating Links} */}
+                <div className="text-xl mb-2 mt-8">Customer Ratings</div>
+                <div>
+                    <ul className="space-y-1">
+                        <li>
+                            <Link className={`${rating === 'all' && 'font-bold'}`}
+                                href={getFilterUrl({ r: 'all' })}>
+                                Any
+                            </Link>
+                        </li>
+                        <hr className="border-t border-gray-300 my-1" />
+                        {ratings.map((r, index) => (
+                            <React.Fragment key={r}>
+                                <li>
+                                    <Link className={`${rating === r.toString() && 'font-bold'}`}
+                                        href={getFilterUrl({ r: `${r}` })}>
+                                        {`${r} star${r === 1 ? '' : 's'} & up`}
+                                    </Link>
+                                </li>
+                                {index !== ratings.length - 1 && <hr className="border-t border-gray-300 my-1" />}
+                            </React.Fragment>
+                        ))}
+                    </ul>
+                </div>
             </div>
 
             <div className="md:col-span-4 space-y-4">
+                <div className="flex-between flex-col md:flex-row my-4">
+                    <div className="flex items-center">
+                        {q !== 'all' && q !== '' && 'Showing results for ' + q + '.'}
+                        {category !== 'all' && category !== '' && ' Category: ' + category + '.'}
+                        {price !== 'all' && price !== '' && ' Price: ' + price + '.'}
+                        {rating !== 'all' && rating !== '' && ' Rating: ' + rating + ` star${rating === '1' ? '' : 's'} & up.`}
+                        &nbsp;
+                        {
+                            (q !== 'all' && q !== '') ||
+                            (category !== 'all' && category !== '') ||
+                            (rating !== 'all') ||
+                            (price !== 'all') ? (
+                                <Button variant={"link"} asChild >
+                                <Link href="/search"> Clear</Link>
+                                </Button>
+                            ) : null}
+                    </div>
 
+                    <div>
+                        {products.data.length} Result{products.data.length !== 1 && 's'}
+                        {/* {sort} */}
+                    </div>
+                </div>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
                     {products.data.length === 0 && (
                         <div>No products found</div>
