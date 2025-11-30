@@ -32,6 +32,39 @@ const ratings = [4, 3, 2, 1];
 
 const sortOrders = ['newest', 'lowest', 'highest', 'rating'];
 
+export async function generateMetadata(props: {
+    searchParams: Promise<{
+        q: string;
+        category: string;
+        price: string;
+        rating: string;
+    }>
+}) {
+    const {
+        q = 'all',
+        category = "all",
+        price = "all",
+        rating = "all",
+    } = await props.searchParams;
+    const isQuerySet = q && q !== 'all' && q.trim() !== '';
+    const isCategorySet = category && category !== 'all' && category.trim() !== '';
+    const isPriceSet = price && price !== 'all' && price.trim() !== '';
+    const isRatingSet = rating && rating !== 'all' && rating.trim() !== '';
+
+    if (isQuerySet || isCategorySet || isPriceSet || isRatingSet) {
+        return {
+            title: `Search ${isQuerySet ? q : ''}
+        ${isCategorySet ? `: Category ${category}` : ''}
+        ${isPriceSet ? ` Price ${price}` : ''}
+        ${isRatingSet ? ` Rating ${rating}` : ''}`,
+        };
+    } else {
+        return {
+            title: 'Search Products',
+        };
+    }
+}
+
 const SearchPage = async (props: {
     searchParams: Promise<{
         q?: string;
@@ -202,11 +235,11 @@ const SearchPage = async (props: {
                         &nbsp;
                         {
                             (q !== 'all' && q !== '') ||
-                            (category !== 'all' && category !== '') ||
-                            (rating !== 'all') ||
-                            (price !== 'all') ? (
+                                (category !== 'all' && category !== '') ||
+                                (rating !== 'all') ||
+                                (price !== 'all') ? (
                                 <Button variant={"link"} asChild >
-                                <Link href="/search"> Clear</Link>
+                                    <Link href="/search"> Clear</Link>
                                 </Button>
                             ) : null}
                     </div>
@@ -225,7 +258,7 @@ const SearchPage = async (props: {
                                 </Link>
                                 {index !== sortOrders.length - 1 && <span className="px-2">|</span>}
                             </React.Fragment>
-                        ))} 
+                        ))}
                     </div>
                 </div>
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
