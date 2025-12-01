@@ -34,10 +34,9 @@ import { StarIcon } from 'lucide-react';
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { z } from 'zod';
-// import {
-//   createUpdateReview,
-//   getReviewByProductId,
-// } from '@/lib/actions/review.actions';
+import {
+  createUpdateReview, getReviewByProductId
+} from '@/lib/actions/review.actions';
 
 const ReviewForm = ({
   userId,
@@ -66,13 +65,13 @@ const ReviewForm = ({
     form.setValue('productId', productId);
     form.setValue('userId', userId);
 
-    // const review = await getReviewByProductId({ productId });
+    const review = await getReviewByProductId({ productId });
 
-    // if (review) {
-    //   form.setValue('title', review.title);
-    //   form.setValue('description', review.description);
-    //   form.setValue('rating', review.rating);
-    // }
+    if (review) {
+      form.setValue('title', review.title);
+      form.setValue('description', review.description);
+      form.setValue('rating', review.rating);
+    }
 
     setOpen(true);
   };
@@ -81,20 +80,17 @@ const ReviewForm = ({
   const onSubmit: SubmitHandler<z.infer<typeof insertReviewSchema>> = async (
     values
   ) => {
-    // const res = await createUpdateReview({ ...values, productId });
+    const res = await createUpdateReview({ ...values, productId });
 
-    // if (!res.success) {
-    //   return toast({
-    //     variant: 'destructive',
-    //     description: res.message,
-    //   });
-    // }
+    if (!res.success) {
+     return toast.error(res.message);
+      }
 
     setOpen(false);
 
     onReviewSubmitted();
 
-    toast.success('Review submitted successfully!');
+    toast.success(res.message);
   };
 
   return (
