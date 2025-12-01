@@ -12,7 +12,7 @@ const ReviewList = ({ userId, productId, productSlug }:
                 <div>No reviews yet. Be the first to review this product!</div>}
             {
                 userId ? (
-                    <ReviewForm userId={userId} productId={productId} />
+                    <ReviewForm userId={userId} productId={productId}     onReviewSubmitted={() => {}} />
                 ) : (
                     <div>
                         Please<Link className="text-blue-700 px-2"
