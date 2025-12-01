@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerTrigger, DrawerHeader, DrawerTitle, DrawerClose, DrawerDescription } from "@/components/ui/drawer";
 import { getAllCategories } from "@/lib/actions/product.actions";
 import { MenuIcon } from "lucide-react";
