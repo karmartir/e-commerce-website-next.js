@@ -5,7 +5,7 @@ import { Button } from './ui/button';
 import Image from 'next/image';
 
 // Static target date (replace with desire date!)
-const TARGET_DATE = new Date('2026-01-01T00:00:00');
+const TARGET_DATE = new Date('2028-01-01T00:00:00');
 
 const MS_PER_SECOND = 1000;
 const MS_PER_MINUTE = 60 * MS_PER_SECOND;
