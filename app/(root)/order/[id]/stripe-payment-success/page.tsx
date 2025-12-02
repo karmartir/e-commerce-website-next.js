@@ -7,11 +7,11 @@ import Stripe from 'stripe';
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
 
 const SuccessPage = async (props: { 
-    params: Promise<{ id: string }>
-    searchParams: Promise<{payment_intent: string}>;
+    params: { id: string }
+    searchParams: {payment_intent: string};
 }) => {
- const {id} = await props.params;
- const {payment_intent: paymentIntentId} = await props.searchParams;
+ const {id} = props.params;
+ const {payment_intent: paymentIntentId} = props.searchParams;
 
  // Fetch order
  const order = await getOrderById(id);
