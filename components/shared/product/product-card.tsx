@@ -6,19 +6,20 @@ import { Product } from "@/types";
 import Rating from "./rating";
 const ProductCard = ({ product }: { product: Product }) => {
   return (
-    <Card className="w-full max-w-sm">
+    <Card className="w-full max-w-sm h-full flex flex-col">
       <CardHeader className="p-0 flex justify-center items-center">
         <Link href={`/product/${product.slug}`}>
           <Image
+            width={300}
+            height={400}
             src={product.images[0]}
             alt={product.name}
-            height={300}
-            width={300}
+            className="h-64 w-full object-cover"
             priority
           />
         </Link>
       </CardHeader>
-      <CardContent className="p-4 grid gap-4">
+      <CardContent className="p-4 grid gap-4 flex-1">
         <div className="text-xs">{product.brand}</div>
         <Link href={`/product/${product.slug}`}>
           <h2 className="text-sm font-medium">{product.name}</h2>
