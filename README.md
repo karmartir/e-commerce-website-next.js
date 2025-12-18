@@ -1,4 +1,3 @@
-# Under construction!!!
 # E-Commerce Website (Next.js) — Project Documentation
 A full featured E-commerce website built with Next.js, TypeScript, PostgreSQL and Prisma.
 
