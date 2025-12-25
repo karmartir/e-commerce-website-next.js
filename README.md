@@ -1,5 +1,5 @@
-# E-Commerce Website (Next.js) — Project Documentation
-A full featured E-commerce website built with Next.js, TypeScript, PostgreSQL and Prisma.
+# E-Commerce Project Documentation
+_A full featured E-commerce website built with Next.js, TypeScript, PostgreSQL and Prisma._
 
 ## Overview
 This project is a more modern and scalable evolution of my earlier MERN-based e‑commerce project (**proshop-demo**). Unlike the MERN version—which relies on a traditional separation of backend (Express) and frontend (React)—this implementation takes full advantage of **Next.js**, offering:
